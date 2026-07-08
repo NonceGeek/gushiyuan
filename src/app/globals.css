@@ -194,6 +194,179 @@ body {
   outline: none;
 }
 
+/* 源流线索：整句轻标记，hover 展开 tooltip */
+.poem-reader__line--lineage {
+  cursor: help;
+  position: relative;
+}
+
+.poem-reader__lineage-mark {
+  margin-inline-start: 0.35em;
+  font-size: 0.625rem;
+  color: color-mix(in srgb, var(--color-ink) 36%, transparent);
+  letter-spacing: 0.04em;
+  vertical-align: super;
+  opacity: 0.72;
+  transition: opacity 160ms ease, color 160ms ease;
+}
+
+.poem-reader__line--lineage:hover .poem-reader__lineage-mark,
+.poem-reader__line--lineage:focus-visible .poem-reader__lineage-mark {
+  opacity: 1;
+  color: color-mix(in srgb, var(--color-ink) 56%, transparent);
+}
+
+.lineage-hint__content [class*="Arrow"] {
+  display: none;
+}
+
+.lineage-hint__label {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.12em;
+}
+
+.lineage-hint__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lineage-hint__item {
+  margin: 0;
+}
+
+.lineage-hint__link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.25rem;
+  transition: background-color 160ms ease;
+}
+
+.lineage-hint__link:hover {
+  background: color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.lineage-hint__relation {
+  font-size: 0.6875rem;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.08em;
+}
+
+.lineage-hint__text {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+
+.lineage-hint__meta {
+  font-size: 0.6875rem;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.04em;
+}
+
+/* 流句展示页 */
+.lineage-page__label,
+.lineage-page__source-label {
+  margin: 0 0 1rem;
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.14em;
+  text-align: center;
+}
+
+.lineage-page__quote {
+  margin: 0;
+  font-size: 1.375rem;
+  line-height: 1.9;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.lineage-page__meta {
+  margin: 1rem 0 0;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.08em;
+}
+
+.lineage-page__relation {
+  margin: 2rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-muted);
+}
+
+.lineage-page__relation-tag {
+  display: inline-block;
+  margin-inline-end: 0.5rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  color: var(--color-ink);
+}
+
+.lineage-page__source {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-ink) 8%, transparent);
+}
+
+.lineage-page__source-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  transition: color 160ms ease;
+}
+
+.lineage-page__source-link:hover {
+  color: var(--color-ink-muted);
+}
+
+.lineage-page__source-line {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  letter-spacing: 0.06em;
+}
+
+.lineage-page__source-meta {
+  font-size: 0.875rem;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.08em;
+}
+
+.lineage-page__back {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+/* 锚点句：从流句页跳回时轻微高亮 */
+.poem-reader__line:target {
+  animation: lineage-target 2.4s ease;
+}
+
+@keyframes lineage-target {
+  0%,
+  15% {
+    background: color-mix(in srgb, var(--color-ink) 6%, transparent);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
 /* 字形演变弹层 */
 .char-evolution__stages {
   display: grid;
@@ -376,6 +549,95 @@ body {
   font-size: 0.95rem;
   color: var(--color-ink-muted);
   letter-spacing: 0.06em;
+}
+
+.catalog__meta {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.06em;
+}
+
+/* 站内检索：固定角落，低对比，唤起前不占正文空间 */
+.site-search__trigger {
+  position: fixed;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 10%, transparent);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--color-paper) 88%, var(--color-ink));
+  color: var(--color-ink-muted);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  opacity: 0.72;
+  transition: opacity 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.site-search__trigger:hover,
+.site-search__trigger:focus-visible {
+  opacity: 1;
+  color: var(--color-ink);
+  border-color: color-mix(in srgb, var(--color-ink) 18%, transparent);
+  outline: none;
+}
+
+.site-search__trigger-label {
+  display: none;
+}
+
+.site-search__shortcut {
+  display: none;
+  font-family: inherit;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-muted);
+}
+
+@media (min-width: 768px) {
+  .site-search__trigger-label,
+  .site-search__shortcut {
+    display: inline;
+  }
+}
+
+/* 字页：字形演变 + 相关诗作 */
+.char-evolution__header {
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.char-evolution__title {
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  line-height: 1.5;
+}
+
+.char-evolution__meaning {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--color-ink-muted);
+  line-height: 1.75;
+  letter-spacing: 0.04em;
+}
+
+.char-page__poems {
+  margin-top: 2.5rem;
+}
+
+.char-page__poems-title {
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.12em;
 }
 
 .dark {

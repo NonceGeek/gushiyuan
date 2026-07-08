@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Character } from "@/lib/character-types";
+import type { LineageByLine } from "@/lib/lineage";
 import type { Poem } from "@/lib/poems";
 import {
   DEFAULT_READING_DIRECTION,
@@ -16,9 +17,10 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 type PoemReaderProps = {
   poem: Poem;
   keyCharacters: Record<string, Character>;
+  lineageByLine: LineageByLine;
 };
 
-export function PoemReader({ poem, keyCharacters }: PoemReaderProps) {
+export function PoemReader({ poem, keyCharacters, lineageByLine }: PoemReaderProps) {
   const lines = poem.body.split("\n").filter(Boolean);
   const [direction, setDirection] = useState<ReadingDirection>(
     DEFAULT_READING_DIRECTION,
@@ -81,6 +83,7 @@ export function PoemReader({ poem, keyCharacters }: PoemReaderProps) {
               line={line}
               lineIndex={index}
               keyCharacters={keyCharacters}
+              lineageClue={lineageByLine.get(index)}
             />
           ))}
         </div>

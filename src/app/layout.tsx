@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { SiteSearch } from "@/components/SiteSearch";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { buildSearchIndex } from "@/lib/search-index";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,9 +15,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const searchIndex = buildSearchIndex();
+
   return (
     <html lang="zh-CN">
-      <body>{children}</body>
+      <body>
+        <SiteSearch index={searchIndex} />
+        <TooltipProvider delay={200}>{children}</TooltipProvider>
+      </body>
     </html>
   );
 }

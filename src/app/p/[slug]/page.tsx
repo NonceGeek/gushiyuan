@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PoemReader } from "@/components/PoemReader";
 import { getKeyCharacterMap } from "@/lib/characters";
+import { getLineageForPoem } from "@/lib/lineage";
 import { getAllPoems, getPoemBySlug } from "@/lib/poems";
 
 type PageProps = {
@@ -32,6 +33,13 @@ export default async function PoemPage({ params }: PageProps) {
   }
 
   const keyCharacters = getKeyCharacterMap(poem.keyChars);
+  const lineageByLine = getLineageForPoem(slug);
 
-  return <PoemReader poem={poem} keyCharacters={keyCharacters} />;
+  return (
+    <PoemReader
+      poem={poem}
+      keyCharacters={keyCharacters}
+      lineageByLine={lineageByLine}
+    />
+  );
 }
