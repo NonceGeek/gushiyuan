@@ -5,6 +5,7 @@ import { CatalogLayout } from "@/components/CatalogLayout";
 import { CharacterEvolutionPanel } from "@/components/CharacterEvolutionPanel";
 import { getAllCharacters, getCharacterByChar } from "@/lib/characters";
 import { getPoemsByKeyChar } from "@/lib/poems";
+import { createPageMetadata } from "@/lib/site-metadata";
 
 type PageProps = {
   params: Promise<{ char: string }>;
@@ -21,10 +22,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "古诗源" };
   }
 
-  return {
+  return createPageMetadata({
     title: `${character.char} · 字形演变 · 古诗源`,
     description: character.meaning,
-  };
+  });
 }
 
 export default async function CharacterPage({ params }: PageProps) {

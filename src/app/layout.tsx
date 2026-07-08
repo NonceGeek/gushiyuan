@@ -2,13 +2,19 @@ import type { Metadata } from "next";
 import { SiteSearch } from "@/components/SiteSearch";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { buildSearchIndex } from "@/lib/search-index";
+import {
+  createPageMetadata,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/site-metadata";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://gsy.aiwayfarer.net"),
-  title: "古诗源",
-  description: "回到原点的古诗阅读",
-};
+export const metadata: Metadata = createPageMetadata({
+  metadataBase: new URL(SITE_URL),
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
+});
 
 export default function RootLayout({
   children,

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPoemBySlug } from "@/lib/poems";
 import { getAllStreamIds, getStreamContext } from "@/lib/lineage";
+import { createPageMetadata } from "@/lib/site-metadata";
 
 type PageProps = {
   params: Promise<{ streamId: string }>;
@@ -20,10 +21,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const { stream } = context;
-  return {
+  return createPageMetadata({
     title: `${stream.text.slice(0, 24)} · ${stream.author} · 古诗源`,
     description: stream.note,
-  };
+  });
 }
 
 export default async function StreamPage({ params }: PageProps) {

@@ -8,6 +8,7 @@ import {
   getPoemsByAuthor,
   getVolumeBySlug,
 } from "@/lib/poems";
+import { createPageMetadata } from "@/lib/site-metadata";
 
 type PageProps = {
   params: Promise<{ volumeSlug: string; authorSlug: string }>;
@@ -33,7 +34,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!volume || !author) {
     return { title: "古诗源" };
   }
-  return { title: `${author.name} · ${volume.name} · 古诗源` };
+  return createPageMetadata({
+    title: `${author.name} · ${volume.name} · 古诗源`,
+  });
 }
 
 export default async function AuthorPage({ params }: PageProps) {
