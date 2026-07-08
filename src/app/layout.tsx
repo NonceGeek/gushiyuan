@@ -25,6 +25,15 @@ export default function RootLayout({
 
   return (
     <html lang="zh-CN">
+      <head>
+        <link
+          rel="preload"
+          href="/fonts/wenkai/wenkai-subset.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body>
         <SiteChrome searchIndex={searchIndex} />
         <TooltipProvider delay={200}>{children}</TooltipProvider>

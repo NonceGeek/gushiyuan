@@ -21,6 +21,7 @@
 # misc
 .DS_Store
 *.pem
+scripts/fonts/LXGWWenKai-Light.ttf
 
 # debug
 npm-debug.log*
