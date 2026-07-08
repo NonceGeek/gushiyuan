@@ -1,0 +1,10 @@
+@font-face {
+  font-family: "LXGW WenKai";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300;
+  src:
+    local("LXGW WenKai"),
+    local("LXGW Wenkai"),
+    url(/fonts/wenkai/wenkai-subset.woff2) format("woff2");
+}
