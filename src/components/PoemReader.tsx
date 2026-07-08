@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Character } from "@/lib/character-types";
 import type { Poem } from "@/lib/poems";
 import {
   DEFAULT_READING_DIRECTION,
@@ -9,13 +10,15 @@ import {
   readStoredReadingDirection,
 } from "@/lib/reading-direction";
 import { cn } from "@/lib/utils";
+import { PoemLine } from "@/components/PoemLine";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 type PoemReaderProps = {
   poem: Poem;
+  keyCharacters: Record<string, Character>;
 };
 
-export function PoemReader({ poem }: PoemReaderProps) {
+export function PoemReader({ poem, keyCharacters }: PoemReaderProps) {
   const lines = poem.body.split("\n").filter(Boolean);
   const [direction, setDirection] = useState<ReadingDirection>(
     DEFAULT_READING_DIRECTION,
@@ -72,10 +75,13 @@ export function PoemReader({ poem }: PoemReaderProps) {
           </p>
         </header>
         <div className="poem-reader__body">
-          {lines.map((line) => (
-            <p key={line} className="poem-reader__line">
-              {line}
-            </p>
+          {lines.map((line, index) => (
+            <PoemLine
+              key={`${index}-${line}`}
+              line={line}
+              lineIndex={index}
+              keyCharacters={keyCharacters}
+            />
           ))}
         </div>
       </div>

@@ -4,6 +4,10 @@ author: 古诗十九首
 authorSlug: gu-shi-shi-jiu-shou
 dynasty: 汉
 volume: han
+keyChars:
+  - 行
+  - 远
+  - 别
 ---
 
 行行重行行，与君生别离。

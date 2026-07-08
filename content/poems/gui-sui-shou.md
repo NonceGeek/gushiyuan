@@ -4,6 +4,10 @@ author: 曹操
 authorSlug: cao-cao
 dynasty: 魏
 volume: wei
+keyChars:
+  - 神
+  - 寿
+  - 生
 ---
 
 神龟虽寿，犹有竟时。

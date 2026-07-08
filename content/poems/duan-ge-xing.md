@@ -4,6 +4,12 @@ author: 曹操
 authorSlug: cao-cao
 dynasty: 魏
 volume: wei
+keyChars:
+  - 月
+  - 心
+  - 忧
+  - 歌
+  - 酒
 ---
 
 对酒当歌，人生几何！

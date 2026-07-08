@@ -4,6 +4,10 @@ author: 古诗十九首
 authorSlug: gu-shi-shi-jiu-shou
 dynasty: 汉
 volume: han
+keyChars:
+  - 心
+  - 忧
+  - 思
 ---
 
 涉江采芙蓉，兰泽多芳草。

@@ -4,6 +4,10 @@ author: 诗经
 authorSlug: shi-jing
 dynasty: 先秦
 volume: xian-qin
+keyChars:
+  - 桃
+  - 华
+  - 归
 ---
 
 桃之夭夭，灼灼其华。

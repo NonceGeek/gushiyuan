@@ -4,6 +4,10 @@ author: 古诗十九首
 authorSlug: gu-shi-shi-jiu-shou
 dynasty: 汉
 volume: han
+keyChars:
+  - 草
+  - 心
+  - 思
 ---
 
 青青河畔草，郁郁园中柳。

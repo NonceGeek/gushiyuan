@@ -4,6 +4,10 @@ author: 诗经
 authorSlug: shi-jing
 dynasty: 先秦
 volume: xian-qin
+keyChars:
+  - 水
+  - 求
+  - 思
 ---
 
 蒹葭苍苍，白露为霜。

@@ -4,6 +4,11 @@ author: 诗经
 authorSlug: shi-jing
 dynasty: 先秦
 volume: xian-qin
+keyChars:
+  - 女
+  - 水
+  - 求
+  - 君
 ---
 
 关关雎鸠，在河之洲。

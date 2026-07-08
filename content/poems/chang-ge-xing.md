@@ -4,6 +4,9 @@ author: 汉乐府
 authorSlug: han-yue-fu
 dynasty: 汉
 volume: han
+keyChars:
+  - 光
+  - 生
 ---
 
 青青园中葵，朝露待日晞。

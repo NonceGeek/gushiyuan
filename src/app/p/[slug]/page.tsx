@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PoemReader } from "@/components/PoemReader";
+import { getKeyCharacterMap } from "@/lib/characters";
 import { getAllPoems, getPoemBySlug } from "@/lib/poems";
 
 type PageProps = {
@@ -29,5 +30,8 @@ export default async function PoemPage({ params }: PageProps) {
   if (!poem) {
     notFound();
   }
-  return <PoemReader poem={poem} />;
+
+  const keyCharacters = getKeyCharacterMap(poem.keyChars);
+
+  return <PoemReader poem={poem} keyCharacters={keyCharacters} />;
 }

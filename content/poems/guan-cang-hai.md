@@ -4,6 +4,11 @@ author: 曹操
 authorSlug: cao-cao
 dynasty: 魏
 volume: wei
+keyChars:
+  - 海
+  - 山
+  - 水
+  - 月
 ---
 
 东临碣石，以观沧海。

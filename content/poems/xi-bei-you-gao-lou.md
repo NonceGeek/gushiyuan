@@ -4,6 +4,9 @@ author: 古诗十九首
 authorSlug: gu-shi-shi-jiu-shou
 dynasty: 汉
 volume: han
+keyChars:
+  - 楼
+  - 思
 ---
 
 西北有高楼，上与浮云齐。

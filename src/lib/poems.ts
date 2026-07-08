@@ -23,6 +23,7 @@ export type AuthorMeta = {
 
 export type Poem = PoemMeta & {
   body: string;
+  keyChars: string[];
 };
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
@@ -43,6 +44,18 @@ function requireField(
   return String(value);
 }
 
+function parseKeyChars(data: Record<string, unknown>): string[] {
+  const value = data.keyChars;
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 function parsePoemFile(slug: string): Poem {
   const filePath = path.join(POEMS_DIR, `${slug}.md`);
   const raw = fs.readFileSync(filePath, "utf-8");
@@ -56,6 +69,7 @@ function parsePoemFile(slug: string): Poem {
     dynasty: requireField(data, "dynasty", slug),
     volume: requireField(data, "volume", slug),
     body: content.trim(),
+    keyChars: parseKeyChars(data),
   };
 }
 
