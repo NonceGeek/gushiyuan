@@ -13,6 +13,7 @@ import type { Poem, PoemMeta } from "@/lib/poems";
 import {
   DEFAULT_READING_DIRECTION,
   type ReadingDirection,
+  alignVerticalScrollToFirstColumn,
   persistReadingDirection,
   readStoredReadingDirection,
   verticalReadingScrollLeft,
@@ -62,11 +63,12 @@ export function PoemReader({
       if (!viewport) {
         return;
       }
-      const scrollLeft = verticalReadingScrollLeft(
+      const target = verticalReadingScrollLeft(
         viewport.scrollWidth,
         viewport.clientWidth,
       );
-      viewport.scrollTo({ left: scrollLeft, behavior: "instant" });
+      // 跨浏览器兜底：scrollLeft 原点正负两种情况都尝试。
+      alignVerticalScrollToFirstColumn(viewport, target);
     }
 
     alignVerticalReadingStart();

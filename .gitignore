@@ -22,6 +22,7 @@
 .DS_Store
 *.pem
 scripts/fonts/LXGWWenKai-Light.ttf
+scripts/fonts/LXGWWenKai-Regular.ttf
 scripts/.cache/
 
 # debug

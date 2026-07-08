@@ -69,4 +69,23 @@ describe("collectSiteFontGlyphs", () => {
       expect(collectSiteFontGlyphs()).toContain(char.codePointAt(0));
     }
   });
+
+  it("merges extraCodePoints for the simplified-variant extension point (#22)", () => {
+    const contentRoot = makeTempContent({ "poems/test.md": "關雎" });
+    const extra = ["鸠".codePointAt(0)!, "洲".codePointAt(0)!];
+
+    const glyphs = collectSiteFontGlyphs({
+      contentRoot,
+      extraCodePoints: extra,
+    });
+
+    // 繁体内容码点
+    for (const char of "關雎") {
+      expect(glyphs).toContain(char.codePointAt(0));
+    }
+    // 简体扩展码点（#22 并入入口）
+    for (const codePoint of extra) {
+      expect(glyphs).toContain(codePoint);
+    }
+  });
 });

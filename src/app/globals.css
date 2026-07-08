@@ -524,24 +524,44 @@ body {
   width: 100%;
 }
 
+/*
+ * 横向滚动容器：靠起始排列 + 仅在未溢出时视觉居中。
+ * `justify-content: safe center` 在内容溢出时退化为 flex-start，
+ * 保证首列（最右端）始终可达，不会被居中推出视口外。
+ * 不再用 `overflow-y: hidden` 裁竖向——单列高度自适应，长句可滚动。
+ */
 .poem-reader--vertical .poem-reader__columns-viewport {
   flex: 1;
   min-height: 0;
   display: flex;
-  justify-content: center;
+  justify-content: safe center;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
+  /* 原生锚定首列：scroll-snap 优先停在列端，JS 兜底处理跨浏览器原点差异。 */
+  scroll-snap-type: x proximity;
+  scroll-padding: clamp(1rem, 3vh, 2rem) clamp(1rem, 4vw, 2rem);
 }
 
+/*
+ * 列容器：flex 行，列自右向左排列（row-reverse 让首项落在最右端=首列），
+ * 显式 gap 做列距（不再用 margin-inline-start），各列顶端对齐。
+ * 每个直接子元素（标题、诗句、校勘）是一列。
+ */
 .poem-reader--vertical .poem-reader__columns {
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  hanging-punctuation: allow-end first last;
-  display: inline-block;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  gap: clamp(1.5em, 4.5vw, 2em);
+  padding: clamp(1rem, 3vh, 2rem) clamp(1rem, 4vw, 2rem);
   min-height: min(68dvh, 100%);
-  vertical-align: top;
+}
+
+/* body 在竖排下让子元素直接成为列容器的 flex item */
+.poem-reader--vertical .poem-reader__body {
+  display: contents;
+  text-align: start;
 }
 
 .poem-reader--vertical .breadcrumbs {
@@ -554,12 +574,17 @@ body {
   justify-content: flex-start;
 }
 
+/* 标题列 */
 .poem-reader--vertical .poem-reader__header {
-  display: inline-block;
-  margin-bottom: 0;
-  margin-inline-start: clamp(1.75em, 4vw, 2.25em);
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  hanging-punctuation: allow-end first last;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0;
   text-align: start;
-  vertical-align: top;
+  scroll-snap-align: end;
 }
 
 .poem-reader--vertical .poem-reader__title {
@@ -569,31 +594,27 @@ body {
 }
 
 .poem-reader--vertical .poem-reader__meta {
-  margin-top: 1.25em;
+  margin-block-start: 1.25em;
+  margin-inline-start: 0;
   font-size: clamp(0.8125rem, 2.4vw, 0.875rem);
   letter-spacing: 0.06em;
 }
 
-.poem-reader--vertical .poem-reader__body {
-  display: inline;
-  text-align: start;
-}
-
+/* 诗句列：每句一列，自上而下，字直立 */
 .poem-reader--vertical .poem-reader__line {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  hanging-punctuation: allow-end first last;
   display: inline-block;
-  margin-inline-start: clamp(1.5em, 4.5vw, 2em);
+  margin: 0;
   font-size: clamp(1.0625rem, 3.2vw, 1.25rem);
   /* 竖排列距略紧于横排行距，一列内字形连贯 */
   line-height: 1.9;
   letter-spacing: 0.05em;
-  hanging-punctuation: allow-end first last;
   /* 无 hanging-punctuation 支持时，为列首标点留半角探出空间 */
   padding-block-start: 0.12em;
   vertical-align: top;
-}
-
-.poem-reader--vertical .poem-reader__line:first-child {
-  margin-inline-start: 0;
+  scroll-snap-align: end;
 }
 
 .poem-reader--vertical .poem-reader__lineage-mark {
@@ -616,11 +637,18 @@ body {
   border-inline-end-color: color-mix(in srgb, var(--color-ink) 52%, transparent);
 }
 
+/*
+ * 校勘/异文区：竖排但用混合方向——汉字仍竖排，阿拉伯数字、拉丁字母、
+ * 卷次用 text-combine-upright: digits 横排嵌入，按正常方向可读。
+ * 不再对整个校勘区强制 text-orientation: upright。
+ */
 .poem-reader--vertical .poem-reader__collation {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-combine-upright: digits 2;
   display: inline-block;
-  margin-top: 0;
-  margin-inline-start: clamp(1.5em, 4.5vw, 2em);
-  padding-top: 0;
+  margin: 0;
+  padding-block-start: 0;
   padding-inline-start: clamp(1em, 3vw, 1.5em);
   border-top: none;
   border-inline-start: 1px solid color-mix(in srgb, var(--color-ink) 8%, transparent);
@@ -628,13 +656,13 @@ body {
   font-size: clamp(0.75rem, 2.2vw, 0.8125rem);
   line-height: 1.85;
   letter-spacing: 0.05em;
-  text-orientation: upright;
   vertical-align: top;
   max-width: none;
+  scroll-snap-align: end;
 }
 
 .poem-reader--vertical .poem-reader__variants {
-  margin-top: 1em;
+  margin-block-start: 1em;
 }
 
 .poem-reader--vertical .poem-reader__variant {
@@ -643,7 +671,6 @@ body {
 }
 
 .poem-reader--vertical .poem-reader__variant + .poem-reader__variant {
-  margin-top: 0;
   margin-block-start: 1.25em;
 }
 

@@ -58,10 +58,20 @@ function walkFiles(root: string, extensions: string[]): string[] {
   return files.sort();
 }
 
-export function collectSiteFontGlyphs(options?: {
+export interface CollectSiteFontGlyphsOptions {
   contentRoot?: string;
   uiLiterals?: string;
-}): number[] {
+  /**
+   * 额外码点入口：供简繁切换（#22）并入简体/繁体字形。
+   * #16 仅留出扩展点，不实现简繁派生逻辑。
+   * 传入的码点会与内容、UI、fallback 合并去重。
+   */
+  extraCodePoints?: Iterable<number>;
+}
+
+export function collectSiteFontGlyphs(
+  options?: CollectSiteFontGlyphsOptions,
+): number[] {
   const contentRoot = options?.contentRoot ?? CONTENT_ROOT;
   const uiLiterals = options?.uiLiterals ?? FONT_UI_LITERALS;
 
@@ -72,6 +82,10 @@ export function collectSiteFontGlyphs(options?: {
 
   for (const file of walkFiles(contentRoot, [".md", ".json"])) {
     codePoints.push(...extractCodePoints(fs.readFileSync(file, "utf8")));
+  }
+
+  if (options?.extraCodePoints) {
+    codePoints.push(...options.extraCodePoints);
   }
 
   return uniqueSortedCodePoints(codePoints);

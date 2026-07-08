@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  alignVerticalScrollToFirstColumn,
   DEFAULT_READING_DIRECTION,
   READING_DIRECTION_STORAGE_KEY,
   overlaySideForReadingDirection,
@@ -80,5 +81,52 @@ describe("verticalReadingScrollLeft", () => {
 
   it("returns overflow when content is wider than the viewport", () => {
     expect(verticalReadingScrollLeft(800, 320)).toBe(480);
+  });
+});
+
+describe("alignVerticalScrollToFirstColumn", () => {
+  type FakeViewport = {
+    scrollWidth: number;
+    clientWidth: number;
+    scrollLeft: number;
+    scrollTo: ReturnType<typeof vi.fn>;
+  };
+
+  function makeViewport(
+    scrollWidth: number,
+    clientWidth: number,
+  ): FakeViewport {
+    const el: FakeViewport = {
+      scrollWidth,
+      clientWidth,
+      scrollLeft: 0,
+      scrollTo: vi.fn((opts: { left: number }) => {
+        el.scrollLeft = opts.left;
+      }),
+    };
+    return el;
+  }
+
+  it("scrolls to the positive origin when the browser supports it", () => {
+    const viewport = makeViewport(800, 320);
+    alignVerticalScrollToFirstColumn(
+      viewport as unknown as HTMLElement,
+      480,
+    );
+    expect(viewport.scrollTo).toHaveBeenCalledWith(
+      expect.objectContaining({ left: 480 }),
+    );
+  });
+
+  it("does not attempt negative fallback when target is zero", () => {
+    const viewport = makeViewport(320, 320);
+    alignVerticalScrollToFirstColumn(
+      viewport as unknown as HTMLElement,
+      0,
+    );
+    expect(viewport.scrollTo).toHaveBeenCalledTimes(1);
+    expect(viewport.scrollTo).toHaveBeenCalledWith(
+      expect.objectContaining({ left: 0 }),
+    );
   });
 });
