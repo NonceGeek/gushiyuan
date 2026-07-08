@@ -206,10 +206,6 @@ body {
   letter-spacing: 0.04em;
 }
 
-.poem-reader__base {
-  margin: 0;
-}
-
 .poem-reader__variants {
   margin: 0.75rem 0 0;
   padding: 0;

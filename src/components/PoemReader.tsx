@@ -122,9 +122,8 @@ export function PoemReader({
   );
 
   const collationFooter =
-    poem.base || poem.variants.length > 0 ? (
+    poem.variants.length > 0 ? (
       <footer className="poem-reader__collation">
-        {poem.base && <p className="poem-reader__base">底本：{poem.base}</p>}
         {poem.variants.length > 0 && (
           <ol className="poem-reader__variants">
             {poem.variants.map((variant) => (

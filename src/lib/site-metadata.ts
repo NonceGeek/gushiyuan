@@ -5,7 +5,7 @@ import { getAllPoems, getAllVolumes } from "@/lib/poems";
 
 export const SITE_URL = "https://gsy.aiwayfarer.net";
 export const SITE_NAME = "古诗源";
-export const SITE_DESCRIPTION = "回到原点的古诗阅读";
+export const SITE_DESCRIPTION = "清·沈德潛《古詩源》—— 唐前詩的源頭";
 export const OG_IMAGE_PATH = "/og.png";
 
 const ogImage = {

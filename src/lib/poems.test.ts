@@ -22,8 +22,8 @@ describe("getPoemBySlug", () => {
     expect(poem?.authorSlug).toBe("cao-cao");
     expect(poem?.dynasty).toBe("魏");
     expect(poem?.volume).toBe("wei");
-    expect(poem?.body).toContain("对酒当歌，人生几何！");
-    expect(poem?.body).toContain("周公吐哺，天下归心。");
+    expect(poem?.body).toContain("對酒當歌，人生幾何！");
+    expect(poem?.body).toContain("周公吐哺，天下歸心。");
   });
 
   it("returns keyChars from frontmatter", () => {
@@ -41,7 +41,7 @@ describe("getPoemBySlug", () => {
   it("returns optional base and variants from frontmatter", () => {
     const poem = getPoemBySlug("duan-ge-xing");
 
-    expect(poem?.base).toMatch(/古诗源/);
+    expect(poem?.base).toMatch(/古詩源/);
     expect(poem?.variants.length).toBeGreaterThan(0);
     expect(poem?.variants[0]).toEqual(
       expect.objectContaining({
@@ -54,7 +54,7 @@ describe("getPoemBySlug", () => {
   it("leaves variants empty when frontmatter omits them", () => {
     const poem = getPoemBySlug("guan-cang-hai");
 
-    expect(poem?.base).toMatch(/古诗源/);
+    expect(poem?.base).toMatch(/古詩源/);
     expect(poem?.variants).toEqual([]);
   });
 
@@ -94,20 +94,24 @@ describe("getAllVolumes", () => {
     const volumes = getAllVolumes();
 
     expect(volumes.map((v) => v.slug)).toEqual([
-      "xian-qin",
+      "gu-yi",
       "han",
       "wei",
       "jin",
-      "nan-bei",
+      "song",
+      "qi",
+      "liang",
+      "chen",
+      "bei-chao",
       "sui",
     ]);
-    expect(volumes[0]?.name).toBe("先秦");
+    expect(volumes[0]?.name).toBe("古逸");
   });
 });
 
 describe("getVolumeBySlug", () => {
   it("returns a volume by slug", () => {
-    expect(getVolumeBySlug("han")?.name).toBe("汉");
+    expect(getVolumeBySlug("han")?.name).toBe("漢");
   });
 
   it("returns undefined for unknown slug", () => {
@@ -187,11 +191,16 @@ describe("getAdjacentPoemsInVolume", () => {
 describe("isVolumeEmpty", () => {
   it("returns true when a volume has no poems", () => {
     expect(isVolumeEmpty("jin")).toBe(true);
-    expect(isVolumeEmpty("nan-bei")).toBe(true);
+    expect(isVolumeEmpty("song")).toBe(true);
+    expect(isVolumeEmpty("qi")).toBe(true);
+    expect(isVolumeEmpty("liang")).toBe(true);
+    expect(isVolumeEmpty("chen")).toBe(true);
+    expect(isVolumeEmpty("bei-chao")).toBe(true);
     expect(isVolumeEmpty("sui")).toBe(true);
   });
 
   it("returns false when a volume has poems", () => {
+    expect(isVolumeEmpty("gu-yi")).toBe(false);
     expect(isVolumeEmpty("wei")).toBe(false);
     expect(isVolumeEmpty("han")).toBe(false);
   });
