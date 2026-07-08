@@ -1,0 +1,8 @@
+[
+  { "slug": "xian-qin", "name": "先秦" },
+  { "slug": "han", "name": "汉" },
+  { "slug": "wei", "name": "魏" },
+  { "slug": "jin", "name": "晋" },
+  { "slug": "nan-bei", "name": "宋齐梁陈" },
+  { "slug": "sui", "name": "隋" }
+]

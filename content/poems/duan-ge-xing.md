@@ -1,7 +1,9 @@
 ---
 title: 短歌行
 author: 曹操
+authorSlug: cao-cao
 dynasty: 魏
+volume: wei
 ---
 
 对酒当歌，人生几何！

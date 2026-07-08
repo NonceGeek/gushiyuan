@@ -1,11 +1,23 @@
-import { PoemReader } from "@/components/PoemReader";
-import { getAllPoems, getPoemBySlug } from "@/lib/poems";
+import Link from "next/link";
+import { CatalogLayout } from "@/components/CatalogLayout";
+import { getAllVolumes } from "@/lib/poems";
 
 export default function HomePage() {
-  const poems = getAllPoems();
-  const poem = poems[0] ? getPoemBySlug(poems[0].slug) : undefined;
-  if (!poem) {
-    return null;
-  }
-  return <PoemReader poem={poem} />;
+  const volumes = getAllVolumes();
+
+  return (
+    <CatalogLayout title="目录">
+      <nav aria-label="朝代分卷">
+        <ol className="catalog__list">
+          {volumes.map((volume) => (
+            <li key={volume.slug} className="catalog__item">
+              <Link href={`/v/${volume.slug}`} className="catalog__link">
+                {volume.name}
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </CatalogLayout>
+  );
 }
