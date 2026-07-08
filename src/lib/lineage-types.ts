@@ -7,6 +7,8 @@ export type StreamRef = {
   work?: string;
   relation: LineageRelation;
   note: string;
+  /** 可查出处，如《全唐诗》卷166 */
+  source: string;
   poemSlug?: string;
   lineIndex?: number;
 };

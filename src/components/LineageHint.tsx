@@ -58,6 +58,7 @@ export function LineageHint({ clue, lineIndex, children }: LineageHintProps) {
                   {stream.author}
                   {stream.work ? ` · ${stream.work}` : ""}
                 </span>
+                <span className="lineage-hint__source">{stream.source}</span>
               </Link>
             </li>
           ))}

@@ -52,6 +52,7 @@ export default async function StreamPage({ params }: PageProps) {
         {stream.author}
         {stream.work ? ` · ${stream.work}` : ""}
       </p>
+      <p className="lineage-page__source-ref">{stream.source}</p>
       <p className="lineage-page__relation">
         <span className="lineage-page__relation-tag">{stream.relation}</span>
         {stream.note}
