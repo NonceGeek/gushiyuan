@@ -1,0 +1,12 @@
+---
+title: 歌
+author: 华容夫人
+authorSlug: hua-rong-fu-ren
+dynasty: 汉
+volume: han
+---
+
+发纷纷兮寘渠。
+骨籍籍兮亡居。
+母求死子兮妻求死夫。
+裴回两渠间兮君子将安居。

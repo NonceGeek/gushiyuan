@@ -126,7 +126,6 @@ describe("getAuthorsByVolume", () => {
   });
 
   it("returns an empty list for a volume with no poems", () => {
-    expect(getAuthorsByVolume("han")).toEqual([]);
     expect(getAuthorsByVolume("wei")).toEqual([]);
   });
 
@@ -200,8 +199,15 @@ describe("getPoemsByVolume", () => {
     expect(poems.at(-1)?.slug).toBe("gu-yan-gu-yu");
   });
 
+  it("orders han poems by volume manifest", () => {
+    const poems = getPoemsByVolume("han");
+
+    expect(poems.length).toBe(134);
+    expect(poems[0]?.slug).toBe("da-feng-ge");
+    expect(poems.at(-1)?.slug).toBe("su-dan-ge");
+  });
+
   it("returns an empty list for a volume with no poems", () => {
-    expect(getPoemsByVolume("han")).toEqual([]);
     expect(getPoemsByVolume("wei")).toEqual([]);
     expect(getPoemsByVolume("jin")).toEqual([]);
   });
@@ -240,7 +246,6 @@ describe("getAdjacentPoemsInVolume", () => {
 
 describe("isVolumeEmpty", () => {
   it("returns true when a volume has no poems", () => {
-    expect(isVolumeEmpty("han")).toBe(true);
     expect(isVolumeEmpty("wei")).toBe(true);
     expect(isVolumeEmpty("jin")).toBe(true);
     expect(isVolumeEmpty("song")).toBe(true);
@@ -253,5 +258,6 @@ describe("isVolumeEmpty", () => {
 
   it("returns false when a volume has poems", () => {
     expect(isVolumeEmpty("gu-yi")).toBe(false);
+    expect(isVolumeEmpty("han")).toBe(false);
   });
 });

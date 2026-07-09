@@ -31,10 +31,11 @@ describe("buildSearchIndex", () => {
     ]);
   });
 
-  it("excludes removed han and wei poems", () => {
+  it("includes han poems and excludes removed wei poems", () => {
     const index = buildSearchIndex();
 
-    expect(index.poems.some((p) => p.volume === "han")).toBe(false);
+    expect(index.poems.some((p) => p.volume === "han")).toBe(true);
+    expect(index.poems.some((p) => p.slug === "da-feng-ge")).toBe(true);
     expect(index.poems.some((p) => p.volume === "wei")).toBe(false);
     expect(index.poems.some((p) => p.slug === "duan-ge-xing")).toBe(false);
   });

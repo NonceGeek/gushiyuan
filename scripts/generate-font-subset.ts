@@ -17,7 +17,7 @@ const PATH_OUT = path.join(ROOT, "src/lib/wenkai-subset-path.generated.ts");
 const MANIFEST_OUT = path.join(ROOT, "scripts/.cache/wenkai.manifest.json");
 const VALIDATE_SCRIPT = path.join(ROOT, "scripts/validate-subset-cmap.py");
 
-const MAX_FONT_BYTES = 400 * 1024;
+const MAX_FONT_BYTES = 1024 * 1024;
 
 async function ensureSourceFont(): Promise<void> {
   if (fs.existsSync(FONT_SOURCE)) {

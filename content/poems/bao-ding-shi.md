@@ -1,0 +1,14 @@
+---
+title: 宝鼎诗
+author: 班固
+authorSlug: ban-gu
+dynasty: 汉
+volume: han
+---
+
+岳修贡兮川效珍。
+吐金景兮歊浮云。
+宝鼎见兮色纷缊。
+焕其炳兮被龙文。
+登祖庙兮享圣神。
+昭灵德兮弥亿年。

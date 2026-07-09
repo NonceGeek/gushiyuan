@@ -1,0 +1,18 @@
+---
+title: 五噫歌
+author: 梁鸿
+authorSlug: liang-hong
+dynasty: 汉
+volume: han
+---
+
+陟彼北芒兮。
+噫。
+顾瞻帝京兮。
+噫。
+宫阙崔巍兮。
+噫。
+民之劬劳兮。
+噫。
+辽辽未央兮。
+噫。

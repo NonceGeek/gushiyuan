@@ -438,6 +438,17 @@ body {
   align-items: stretch;
   justify-content: flex-start;
   padding-bottom: clamp(1rem, 3vh, 1.75rem);
+  /*
+   * 竖排节律（借鉴 kami 编辑排版的间距分级，适配 LXGW WenKai 竖排诗读）：
+   * - char-track：字距，沿 inline 轴（竖排纵轴）
+   * - col-leading：列宽，沿 block 轴（line-height）
+   * - stanza-gap：同列句距
+   * - column-gap：列与列之间
+   */
+  --vertical-char-track: 0.14em;
+  --vertical-col-leading: 2.1;
+  --vertical-stanza-gap: 1em;
+  --vertical-column-gap: clamp(1.4em, 3.5vw, 2.25em);
 }
 
 .poem-reader--vertical .poem-reader__viewport {
@@ -505,7 +516,7 @@ body {
   display: flex;
   flex-direction: row-reverse;
   align-items: flex-start;
-  gap: clamp(1.05em, 2.6vw, 1.55em);
+  gap: var(--vertical-column-gap);
   padding-block: clamp(0.75rem, 3vh, 1.5rem);
   padding-inline: clamp(1rem, 4vw, 2rem);
   min-height: min(52dvh, 100%);
@@ -525,8 +536,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.65em;
+  gap: 0.32em;
   flex-shrink: 0;
+  /* vertical-rl 下 block-end = 物理左侧，拉开作者列与正文列 */
+  margin-block-end: 0.9em;
 }
 
 .poem-reader--vertical .poem-reader__masthead .poem-reader__title,
@@ -546,19 +559,42 @@ body {
 
 .poem-reader--vertical .poem-reader__masthead .poem-reader__meta {
   margin: 0;
+  display: flex;
+  /* vertical-rl 下 inline 轴为纵轴，row 让朝代/点/作者自上而下叠放 */
+  flex-direction: row;
+  align-items: center;
+  gap: 0.1em;
   font-size: clamp(0.75rem, 2.2vw, 0.8125rem);
   color: var(--color-ink-muted);
-  letter-spacing: 0.02em;
-  line-height: 1.35;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.poem-reader--vertical .poem-reader__meta-dynasty,
+.poem-reader--vertical .poem-reader__meta-author {
+  display: block;
   text-align: center;
 }
 
 .poem-reader--vertical .poem-reader__meta-sep {
-  margin-inline: 0.08em;
-  display: inline-block;
-  width: 1em;
+  margin: 0;
+  display: block;
+  inline-size: 1em;
+  block-size: 1em;
+  color: transparent;
   line-height: 1;
-  text-align: center;
+  position: relative;
+}
+
+.poem-reader--vertical .poem-reader__meta-sep::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 0.22em;
+  height: 0.22em;
+  border-radius: 50%;
+  background: var(--color-ink-muted);
 }
 
 /* 正文列：同一竖行内叠放若干句（奇三偶二），多列自右向左 */
@@ -567,7 +603,7 @@ body {
   /* vertical-rl 下 inline 轴为纵轴，row 让多句在同一条竖行内自上而下排列 */
   flex-direction: row;
   align-items: flex-start;
-  gap: 0.24em;
+  gap: var(--vertical-stanza-gap);
   flex-shrink: 0;
 }
 
@@ -578,9 +614,9 @@ body {
 .poem-reader--vertical .poem-reader__line {
   margin: 0;
   font-size: clamp(1.0625rem, 3vw, 1.25rem);
-  line-height: 1.5;
-  letter-spacing: 0.015em;
-  padding-block-start: 0.04em;
+  line-height: var(--vertical-col-leading);
+  letter-spacing: var(--vertical-char-track);
+  padding-block-start: 0.06em;
 }
 
 .poem-reader--vertical .poem-reader__line--lineage {

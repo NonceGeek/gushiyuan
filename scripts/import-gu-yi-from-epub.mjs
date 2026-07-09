@@ -11,6 +11,13 @@ import path from "path";
 import { execSync } from "child_process";
 import { fileURLToPath } from "url";
 import { GU_YI_METADATA } from "./gu-yi-metadata.mjs";
+import {
+  extractTitleFromHeading,
+  formatBody,
+  processPoemBlocks,
+  renderPoemMarkdown,
+  stripPoemHtml,
+} from "./epub-poem-utils.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -22,125 +29,19 @@ const DYNASTY = "古逸";
 const VOLUME = "gu-yi";
 const EXPECTED_COUNT = 103;
 
-/** Punctuation that marks mis-tagged commentary after inline notes are stripped. */
-const POLLUTION_PATTERN = /[，,：:；;？?！!""''「」『』《》]/;
+export { extractTitleFromHeading as extractTitleFromH3 };
+export {
+  formatBody,
+  processPoemBlocks,
+  renderPoemMarkdown,
+};
 
-/** Allowed punctuation in poem body lines (besides CJK characters). */
-const ALLOWED_PUNCT = new Set(["。", "、"]);
-
-/**
- * @param {string} html
- */
-export function extractTitleFromH3(html) {
-  const titleAttr = html.match(/\btitle="([^"]+)"/);
-  if (titleAttr) {
-    return titleAttr[1].trim();
-  }
-
-  let inner = html.replace(/<span class="kaiti1[^"]*">[\s\S]*?<\/span>/gi, "");
-  inner = inner.replace(/<[^>]+>/g, "").trim();
-  inner = inner.replace(/[\u3000\s]+/g, "");
-  inner = inner.replace(/[二三四五六七八九十百千]+章$/, "");
-  return inner.trim();
-}
-
-/**
- * Remove kaiti/kaiti1 spans including nested markup.
- * @param {string} html
- */
-function removeKaitiSpans(html) {
-  const openPattern = /<span class="kaiti1?[^"]*">/gi;
-  let result = html;
-  let match;
-
-  while ((match = openPattern.exec(result)) !== null) {
-    const start = match.index;
-    let depth = 1;
-    let i = start + match[0].length;
-
-    while (i < result.length && depth > 0) {
-      const rest = result.slice(i);
-      if (rest.startsWith("<span")) {
-        depth += 1;
-        i = result.indexOf(">", i) + 1;
-      } else if (rest.startsWith("</span>")) {
-        depth -= 1;
-        i += 7;
-      } else {
-        i += 1;
-      }
-    }
-
-    result = result.slice(0, start) + result.slice(i);
-    openPattern.lastIndex = start;
-  }
-
-  return result;
-}
-
-/**
- * Strip inline notes and HTML, leaving plain poem text.
- * @param {string} html
- */
-export function stripPoemHtml(html) {
-  let text = removeKaitiSpans(html);
-  text = text.replace(/<br[^>]*\/?>/gi, "");
-  text = text.replace(/<[^>]+>/g, "");
-  text = text
-    .replace(/&nbsp;/g, " ")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"');
-  return text.trim();
-}
-
-/**
- * @param {string} text
- * @returns {boolean}
- */
-export function isPollutedParagraph(text) {
-  return POLLUTION_PATTERN.test(text);
-}
-
-/**
- * Split a poem paragraph into one line per sentence, each ending with 。
- * @param {string} text
- * @returns {string[]}
- */
-export function splitIntoLines(text) {
-  const parts = text
-    .split("。")
-    .map((part) => part.trim())
-    .filter(Boolean);
-
-  return parts.map((part) => `${part}。`);
-}
-
-/**
- * @param {string} line
- */
-export function validateLinePunctuation(line) {
-  for (const char of line) {
-    if (/[\u4e00-\u9fff]/.test(char)) {
-      continue;
-    }
-    if (!ALLOWED_PUNCT.has(char)) {
-      throw new Error(`Disallowed character "${char}" in line: ${line}`);
-    }
-  }
-  if (!line.endsWith("。")) {
-    throw new Error(`Line must end with 。: ${line}`);
-  }
-}
-
-/**
- * @param {string[][]} chapters
- * @returns {string}
- */
-export function formatBody(chapters) {
-  return chapters.map((chapter) => chapter.join("\n")).join("\n\n");
-}
+export { stripPoemHtml };
+export {
+  isPollutedParagraph,
+  splitIntoLines,
+  validateLinePunctuation,
+} from "./epub-poem-utils.mjs";
 
 /**
  * @param {string} html
@@ -156,7 +57,7 @@ export function parseGuYiEntries(html) {
 
   for (let i = 0; i < matches.length; i++) {
     const match = matches[i];
-    const title = extractTitleFromH3(match[0]);
+    const title = extractTitleFromHeading(match[0]);
     const sectionStart = match.index + match[0].length;
     const sectionEnd =
       i + 1 < matches.length ? matches[i + 1].index : html.length;
@@ -164,29 +65,12 @@ export function parseGuYiEntries(html) {
 
     const poemPattern =
       /<p class="kindle-cn-poem-left">([\s\S]*?)<\/p>/gi;
-    const poemBlocks = [...section.matchAll(poemPattern)];
+    const poemBlocks = [...section.matchAll(poemPattern)].map((block) => block[1]);
 
-    const chapters = [];
-
-    for (const block of poemBlocks) {
-      const raw = block[1];
-      const text = stripPoemHtml(raw);
-
-      if (!text) {
-        continue;
-      }
-
-      if (isPollutedParagraph(text)) {
-        rejected.push({ title, text: text.slice(0, 80) + (text.length > 80 ? "…" : "") });
-        continue;
-      }
-
-      const lines = splitIntoLines(text);
-      for (const line of lines) {
-        validateLinePunctuation(line);
-      }
-      chapters.push(lines);
-    }
+    const chapters = processPoemBlocks(poemBlocks, {
+      title,
+      onReject: (item) => rejected.push(item),
+    });
 
     entries.push({ title, chapters });
   }
@@ -202,22 +86,6 @@ export function readEpubHtml(epubPath) {
     encoding: "utf-8",
     maxBuffer: 10 * 1024 * 1024,
   });
-}
-
-/**
- * @param {{ title: string, author: string, authorSlug: string, body: string }} poem
- */
-export function renderPoemMarkdown({ title, author, authorSlug, body }) {
-  return `---
-title: ${title}
-author: ${author}
-authorSlug: ${authorSlug}
-dynasty: ${DYNASTY}
-volume: ${VOLUME}
----
-
-${body}
-`;
 }
 
 /**
@@ -253,6 +121,8 @@ export function importGuYiFromEpub(epubPath) {
         title: entry.title,
         author: meta.author,
         authorSlug: meta.authorSlug,
+        dynasty: DYNASTY,
+        volume: VOLUME,
         body,
       }),
     );
