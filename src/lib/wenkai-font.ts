@@ -1,6 +1,7 @@
 import { preload } from "react-dom";
+import { WENKAI_SUBSET_PATH } from "@/lib/wenkai-subset-path.generated";
 
-export const WENKAI_SUBSET_PATH = "/fonts/wenkai/wenkai-subset.woff2";
+export { WENKAI_SUBSET_PATH };
 
 export function preloadWenkaiSubset(): void {
   preload(WENKAI_SUBSET_PATH, {

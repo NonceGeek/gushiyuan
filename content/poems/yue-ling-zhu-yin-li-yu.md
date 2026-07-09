@@ -1,5 +1,5 @@
 ---
-title: 月令注引里語
+title: 月令注引俚語
 author: 月令注
 authorSlug: yue-ling-zhu
 dynasty: 古逸
