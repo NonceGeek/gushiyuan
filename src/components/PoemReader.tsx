@@ -182,6 +182,10 @@ export function PoemReader({
     }
 
     function onWheel(event: WheelEvent) {
+      if (!scrollViewport) {
+        return;
+      }
+
       if (
         event.target instanceof Element &&
         event.target.closest('[data-slot="popover-content"]')
