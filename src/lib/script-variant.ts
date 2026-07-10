@@ -8,7 +8,7 @@ export type TextVariant = {
 export type VariantableText = string | TextVariant;
 
 export const SCRIPT_VARIANT_STORAGE_KEY = "gushiyuan-script-variant";
-export const DEFAULT_SCRIPT_VARIANT: ScriptVariant = "simplified";
+export const DEFAULT_SCRIPT_VARIANT: ScriptVariant = "traditional";
 
 export function isTextVariant(text: VariantableText): text is TextVariant {
   return typeof text !== "string";
@@ -25,8 +25,8 @@ export function textForScriptVariant(
 }
 
 export function parseScriptVariant(value: string | null): ScriptVariant {
-  if (value === "traditional") {
-    return "traditional";
+  if (value === "traditional" || value === "simplified") {
+    return value;
   }
   return DEFAULT_SCRIPT_VARIANT;
 }

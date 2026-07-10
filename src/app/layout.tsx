@@ -8,6 +8,10 @@ import {
   SITE_URL,
 } from "@/lib/site-metadata";
 import { SCRIPT_VARIANT_BOOTSTRAP } from "@/lib/script-variant-bootstrap";
+import {
+  DEFAULT_SCRIPT_VARIANT,
+  langForScriptVariant,
+} from "@/lib/script-variant";
 import { preloadWenkaiSubset } from "@/lib/wenkai-font";
 import "./globals.css";
 
@@ -26,7 +30,10 @@ export default function RootLayout({
   const uiText = buildSiteUiText();
 
   return (
-    <html lang="zh-CN" suppressHydrationWarning>
+    <html
+      lang={langForScriptVariant(DEFAULT_SCRIPT_VARIANT)}
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{ __html: SCRIPT_VARIANT_BOOTSTRAP }}

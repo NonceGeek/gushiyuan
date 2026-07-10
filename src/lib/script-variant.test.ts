@@ -13,11 +13,13 @@ import {
 } from "@/lib/script-variant";
 
 describe("parseScriptVariant", () => {
-  it("returns traditional only for the traditional token", () => {
+  it("returns the matching token for known variants", () => {
     expect(parseScriptVariant("traditional")).toBe("traditional");
+    expect(parseScriptVariant("simplified")).toBe("simplified");
   });
 
-  it("falls back to simplified for missing or unknown values", () => {
+  it("falls back to the default for missing or unknown values", () => {
+    expect(DEFAULT_SCRIPT_VARIANT).toBe("traditional");
     expect(parseScriptVariant(null)).toBe(DEFAULT_SCRIPT_VARIANT);
     expect(parseScriptVariant("")).toBe(DEFAULT_SCRIPT_VARIANT);
     expect(parseScriptVariant("zh-Hant")).toBe(DEFAULT_SCRIPT_VARIANT);
@@ -71,7 +73,7 @@ describe("readScriptVariantFromCookies", () => {
     expect(cookieStore.get).toHaveBeenCalledWith(SCRIPT_VARIANT_STORAGE_KEY);
   });
 
-  it("falls back to simplified when the cookie is missing", () => {
+  it("falls back to the default when the cookie is missing", () => {
     const cookieStore = {
       get: vi.fn().mockReturnValue(undefined),
     };
@@ -89,7 +91,7 @@ describe("readScriptVariantFromDocumentCookie", () => {
     expect(readScriptVariantFromDocumentCookie()).toBe("traditional");
   });
 
-  it("falls back to simplified when the cookie is missing", () => {
+  it("falls back to the default when the cookie is missing", () => {
     vi.stubGlobal("document", { cookie: "" });
 
     expect(readScriptVariantFromDocumentCookie()).toBe(DEFAULT_SCRIPT_VARIANT);
