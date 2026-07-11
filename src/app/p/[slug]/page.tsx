@@ -31,9 +31,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!poem) {
     return { title: "古诗源" };
   }
+  const title =
+    poem.author === poem.title
+      ? `${poem.title} · 古诗源`
+      : `${poem.title} · ${poem.author} · 古诗源`;
+
   return createPageMetadata({
-    title: `${poem.title} · ${poem.author} · 古诗源`,
-    description: poem.body.slice(0, 80),
+    title,
+    description: poem.body.replace(/\n/g, "").slice(0, 80),
   });
 }
 

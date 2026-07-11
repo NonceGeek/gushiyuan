@@ -154,14 +154,16 @@ export function SiteSearchDialog({ open, onOpenChange }: SiteSearchDialogProps) 
                         }}
                       />
                     </span>
-                    <span className="ml-auto shrink-0 text-xs tracking-[0.06em] text-[var(--color-ink-muted)]">
-                      <VariantText
-                        text={{
-                          simplified: poem.author,
-                          traditional: poem.authorTraditional,
-                        }}
-                      />
-                    </span>
+                    {poem.author === poem.title ? null : (
+                      <span className="ml-auto shrink-0 text-xs tracking-[0.06em] text-[var(--color-ink-muted)]">
+                        <VariantText
+                          text={{
+                            simplified: poem.author,
+                            traditional: poem.authorTraditional,
+                          }}
+                        />
+                      </span>
+                    )}
                   </CommandItem>
                 ))}
               </CommandGroup>

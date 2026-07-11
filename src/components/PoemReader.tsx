@@ -34,18 +34,22 @@ import type { VariantableText } from "@/lib/script-variant";
 function PoemAttribution({
   dynasty,
   author,
+  hideAuthor,
 }: {
   dynasty: VariantableText;
   author: VariantableText;
+  hideAuthor?: boolean;
 }) {
   return (
     <p className="poem-reader__meta">
       <span className="poem-reader__meta-dynasty">
         <VariantText text={dynasty} />
       </span>
-      <span className="poem-reader__meta-author">
-        <VariantText text={author} />
-      </span>
+      {hideAuthor ? null : (
+        <span className="poem-reader__meta-author">
+          <VariantText text={author} />
+        </span>
+      )}
     </p>
   );
 }
@@ -209,6 +213,7 @@ export function PoemReader({
                     simplified: poem.author,
                     traditional: poem.authorTraditional,
                   }}
+                  hideAuthor={poem.author === poem.title}
                 />
               </header>
               {displayChapters.map((sentences, chapterIndex) => {
