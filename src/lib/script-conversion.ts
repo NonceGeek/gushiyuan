@@ -48,13 +48,26 @@ const sortedOverrides = [...(overrides as ConversionOverride[])]
     convertedSource: convertSimplifiedToTraditional(override.source),
   }));
 
-export function toTraditional(input: string): string {
+function convertToTraditionalUncached(input: string): string {
   let converted = convertSimplifiedToTraditional(input);
 
   for (const override of sortedOverrides) {
     converted = converted.split(override.convertedSource).join(override.traditional);
   }
 
+  return converted;
+}
+
+/** Process-local memo only; not shared across npm generator processes. */
+const traditionalByInput = new Map<string, string>();
+
+export function toTraditional(input: string): string {
+  const cached = traditionalByInput.get(input);
+  if (cached !== undefined) {
+    return cached;
+  }
+  const converted = convertToTraditionalUncached(input);
+  traditionalByInput.set(input, converted);
   return converted;
 }
 

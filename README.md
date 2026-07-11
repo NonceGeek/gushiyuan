@@ -21,6 +21,14 @@ npm run typecheck
 npm run verify  # 提交 PR 前的本地门禁：typecheck + lint + test
 ```
 
+字体子集、图标字体与检索索引会写入本地 `scripts/.cache/`。输入未变时 `predev` / `build` 会跳过生成并打印 cache hit；改内容、转换规则、生成脚本、lockfile 或源字体后自动失效。CI 干净 checkout 仍是冷生成。强制重跑：
+
+```bash
+npm run generate:force
+# 或 GENERATE_FORCE=1 npm run predev
+# 或删除 scripts/.cache 后再 npm run predev
+```
+
 ## 卷目录配置生成
 
 九个朝代分卷的 `scripts/*-config.mjs` 由统一引擎从 EPUB 生成。需要本机可读的源 EPUB，通过参数或环境变量 `GUSHIYUAN_EPUB` 传入；不要把 EPUB 或机器路径写进仓库。

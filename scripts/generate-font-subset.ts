@@ -4,6 +4,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import subsetFont from "subset-font";
 import { collectSiteFontGlyphs } from "../src/lib/font-glyphs";
+import {
+  computeInputFingerprint,
+  isCacheHit,
+  readCacheManifest,
+  writeCacheManifest,
+} from "./lib/generation-cache";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 // Regular(400) 为正文权威字重：Light(300) 在小字号下发虚，Regular 在桌面/移动一致。
@@ -16,11 +22,87 @@ const CSS_OUT = path.join(ROOT, "src/fonts/wenkai.css");
 const PATH_OUT = path.join(ROOT, "src/lib/wenkai-subset-path.generated.ts");
 const MANIFEST_OUT = path.join(ROOT, "scripts/.cache/wenkai.manifest.json");
 const VALIDATE_SCRIPT = path.join(ROOT, "scripts/validate-subset-cmap.py");
+const GENERATOR_VERSION = "1";
 
 // 简繁双变体会把繁体派生码点纳入子集；保留上限防止异常膨胀。
 const MAX_FONT_BYTES = 1536 * 1024;
 /** 每片目标码点数；顺序分桶，约 13 片覆盖全站字形。 */
 const GLYPHS_PER_SLICE = 400;
+
+type WenKaiManifestSlice = {
+  index: number;
+  glyphCount: number;
+  fontFile: string;
+  publicPath: string;
+  unicodeRange: string;
+  bytes: number;
+};
+
+function computeWenKaiInputsHash(): string {
+  return computeInputFingerprint({
+    root: ROOT,
+    files: [
+      "src/lib/font-glyphs.ts",
+      "src/lib/font-ui-literals.ts",
+      "src/lib/site-ui-text.ts",
+      "src/lib/site-metadata.ts",
+      "src/lib/script-conversion.ts",
+      "content/script-conversion-overrides.json",
+      "scripts/generate-font-subset.ts",
+      "scripts/validate-subset-cmap.py",
+      "package-lock.json",
+      "scripts/fonts/LXGWWenKai-Regular.ttf",
+    ],
+    directories: ["content"],
+    extensions: [".md", ".json"],
+    version: GENERATOR_VERSION,
+  });
+}
+
+function tryWenKaiCacheHit(inputsHash: string): boolean {
+  const manifest = readCacheManifest(MANIFEST_OUT);
+  if (
+    manifest === null ||
+    typeof manifest !== "object" ||
+    Array.isArray(manifest)
+  ) {
+    return false;
+  }
+
+  const record = manifest as {
+    inputsHash?: unknown;
+    generatorVersion?: unknown;
+    slices?: unknown;
+  };
+  if (
+    !Array.isArray(record.slices) ||
+    record.slices.length === 0 ||
+    record.slices.some(
+      (slice) =>
+        typeof slice !== "object" ||
+        slice === null ||
+        typeof (slice as WenKaiManifestSlice).fontFile !== "string" ||
+        typeof (slice as WenKaiManifestSlice).bytes !== "number",
+    )
+  ) {
+    return false;
+  }
+
+  const slices = record.slices as WenKaiManifestSlice[];
+  return isCacheHit({
+    manifestPath: MANIFEST_OUT,
+    inputsHash,
+    generatorVersion: GENERATOR_VERSION,
+    outputs: [
+      ...slices.map((slice) => ({
+        path: path.join(OUT_DIR, slice.fontFile),
+        bytes: slice.bytes,
+      })),
+      { path: CSS_OUT },
+      { path: PATH_OUT },
+    ],
+  });
+}
 
 async function ensureSourceFont(): Promise<void> {
   if (fs.existsSync(FONT_SOURCE)) {
@@ -158,6 +240,12 @@ function validateSubsetCmap(fontPath: string, glyphs: number[]): void {
 async function main(): Promise<void> {
   await ensureSourceFont();
 
+  const inputsHash = computeWenKaiInputsHash();
+  if (tryWenKaiCacheHit(inputsHash)) {
+    console.log("Skipping WenKai subset generation (cache hit)");
+    return;
+  }
+
   const glyphs = collectSiteFontGlyphs();
   const slices = sliceCodePoints(glyphs);
 
@@ -171,14 +259,7 @@ async function main(): Promise<void> {
   fs.mkdirSync(path.dirname(MANIFEST_OUT), { recursive: true });
 
   const sourceFont = fs.readFileSync(FONT_SOURCE);
-  const sliceMeta: {
-    index: number;
-    glyphCount: number;
-    fontFile: string;
-    publicPath: string;
-    unicodeRange: string;
-    bytes: number;
-  }[] = [];
+  const sliceMeta: WenKaiManifestSlice[] = [];
 
   let totalBytes = 0;
 
@@ -234,6 +315,8 @@ async function main(): Promise<void> {
     glyphCount: glyphs.length,
     sliceCount: slices.length,
     totalBytes,
+    inputsHash,
+    generatorVersion: GENERATOR_VERSION,
     slices: sliceMeta.map(
       ({ index, glyphCount, fontFile, publicPath, unicodeRange, bytes }) => ({
         index,
@@ -245,7 +328,7 @@ async function main(): Promise<void> {
       }),
     ),
   };
-  fs.writeFileSync(MANIFEST_OUT, `${JSON.stringify(manifest, null, 2)}\n`);
+  writeCacheManifest(MANIFEST_OUT, manifest);
 
   console.log(
     `Generated ${slices.length} slices: ${(totalBytes / 1024).toFixed(1)} KiB total for ${glyphs.length} glyphs.`,

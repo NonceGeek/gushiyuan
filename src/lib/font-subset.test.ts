@@ -80,8 +80,16 @@ describe("font subset", () => {
       if (fs.existsSync(MANIFEST_PATH)) {
         const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, "utf8")) as {
           totalBytes: number;
+          inputsHash?: string;
+          generatorVersion?: string;
+          slices?: { fontFile: string; bytes: number }[];
         };
         expect(manifest.totalBytes).toBeLessThanOrEqual(1536 * 1024);
+        expect(typeof manifest.inputsHash).toBe("string");
+        expect(manifest.inputsHash!.length).toBeGreaterThan(0);
+        expect(manifest.generatorVersion).toBe("1");
+        expect(Array.isArray(manifest.slices)).toBe(true);
+        expect(manifest.slices!.length).toBe(WENKAI_SUBSET_PATHS.length);
       }
     },
   );
