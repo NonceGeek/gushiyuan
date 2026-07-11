@@ -448,11 +448,13 @@ body {
   padding-top: calc(var(--poem-header-clearance) + env(safe-area-inset-top, 0px));
   /*
    * 竖排节律：
+   * - body-size：正文字号，由正文容器设置、行/句继承
    * - char-track：一句一列用 flex gap；栏内回行用 letter-spacing
    * - col-leading：列宽，沿 block 轴（line-height）
    * - column-gap：列与列之间
    * - reflow-height：栏内回行栏高，默认 22em
    */
+  --vertical-body-size: clamp(1.125rem, 3.2vw, 1.375rem);
   --vertical-char-track: 0.2em;
   --vertical-col-leading: 2.05;
   --vertical-column-gap: 2em;
@@ -588,6 +590,7 @@ body {
   flex-direction: row;
   align-items: flex-start;
   flex-shrink: 0;
+  font-size: var(--vertical-body-size);
 }
 
 /* 栏内回行：章内连续排入固定栏高，装满后自动向左回行。 */
@@ -597,7 +600,7 @@ body {
   scroll-snap-align: end;
   white-space: normal;
   word-break: normal;
-  font-size: clamp(1.0625rem, 3vw, 1.25rem);
+  font-size: var(--vertical-body-size);
   height: var(--vertical-reflow-height);
   max-height: min(var(--vertical-reflow-height), calc(100dvh - 11rem));
   overflow: hidden;
@@ -608,7 +611,7 @@ body {
 
 .poem-reader--vertical .poem-reader__line {
   margin: 0;
-  font-size: clamp(1.0625rem, 3vw, 1.25rem);
+  font-size: inherit;
   line-height: var(--vertical-col-leading);
   letter-spacing: var(--vertical-char-track);
   padding-block-start: 0;
@@ -637,7 +640,7 @@ body {
 }
 
 .poem-reader--vertical .poem-reader__sentence {
-  font-size: clamp(1.0625rem, 3vw, 1.25rem);
+  font-size: inherit;
   line-height: var(--vertical-col-leading);
   letter-spacing: var(--vertical-char-track);
 }
