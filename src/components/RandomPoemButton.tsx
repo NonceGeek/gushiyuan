@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Dices } from "lucide-react";
+import { useAudioFilter } from "@/components/AudioFilterProvider";
 import { useUiText } from "@/components/ScriptVariantProvider";
+import { loadAudioPoemSlugs } from "@/lib/load-audio-poem-slugs";
 import { loadPoemSlugs } from "@/lib/load-poem-slugs";
 import {
   pickRandomPoemSlug,
@@ -15,6 +17,7 @@ export function RandomPoemButton() {
   const randomPoem = useUiText("randomPoem");
   const router = useRouter();
   const pathname = usePathname();
+  const { audioOnly } = useAudioFilter();
   const [pending, setPending] = useState(false);
 
   async function handleClick() {
@@ -24,7 +27,9 @@ export function RandomPoemButton() {
 
     setPending(true);
     try {
-      const slugs = await loadPoemSlugs();
+      const slugs = audioOnly
+        ? await loadAudioPoemSlugs()
+        : await loadPoemSlugs();
       const slug = pickRandomPoemSlug(
         slugs,
         poemSlugFromPathname(pathname),

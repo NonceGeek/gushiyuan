@@ -15,6 +15,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { useAudioFilter } from "@/components/AudioFilterProvider";
 import { loadSearchIndex } from "@/lib/load-search-index";
 import {
   searchDialogAnchorCss,
@@ -43,6 +44,7 @@ export function SiteSearchDialog({
   const searchLoadError = useUiText("searchLoadError");
   const searchPoemsHeading = useUiText("searchPoemsHeading");
   const searchAuthorsHeading = useUiText("searchAuthorsHeading");
+  const { audioOnly } = useAudioFilter();
   const [index, setIndex] = useState<SearchIndex | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [query, setQuery] = useState("");
@@ -87,8 +89,21 @@ export function SiteSearchDialog({
     if (!index) {
       return { poems: [], authors: [] };
     }
-    return filterSearchIndex(index, debouncedQuery);
-  }, [index, debouncedQuery]);
+    const scopedIndex = audioOnly
+      ? {
+          poems: index.poems.filter((poem) => poem.hasAudio),
+          authors: index.authors.filter((author) =>
+            index.poems.some(
+              (poem) =>
+                poem.hasAudio &&
+                poem.volume === author.volume &&
+                poem.author === author.name,
+            ),
+          ),
+        }
+      : index;
+    return filterSearchIndex(scopedIndex, debouncedQuery);
+  }, [index, debouncedQuery, audioOnly]);
 
   const hasResults =
     results.poems.length > 0 || results.authors.length > 0;

@@ -1,13 +1,18 @@
-import Link from "next/link";
 import { CatalogLayout } from "@/components/CatalogLayout";
-import { VariantText } from "@/components/VariantText";
-import { VolumesNav } from "@/components/VolumesNav";
-import { getAllPoems, getAllVolumes } from "@/lib/poems";
+import { VolumeCatalogList } from "@/components/VolumeCatalogList";
+import { getAllVolumes, getPoemsByVolume } from "@/lib/poems";
 import { makeTextVariant } from "@/lib/script-conversion";
 
 export default function HomePage() {
-  const volumes = getAllVolumes();
-  const volumesWithPoems = new Set(getAllPoems().map((poem) => poem.volume));
+  const volumes = getAllVolumes().map((volume) => {
+    const poems = getPoemsByVolume(volume.slug);
+    return {
+      slug: volume.slug,
+      name: makeTextVariant(volume.name),
+      poemCount: poems.length,
+      audioPoemCount: poems.filter((poem) => poem.hasAudio).length,
+    };
+  });
 
   return (
     <CatalogLayout
@@ -17,32 +22,17 @@ export default function HomePage() {
         { label: makeTextVariant("目录") },
       ]}
     >
-      <VolumesNav>
-        <ol className="catalog__list">
-          {volumes.map((volume) => {
-            const empty = !volumesWithPoems.has(volume.slug);
-
-            return (
-              <li key={volume.slug} className="catalog__item">
-                {empty ? (
-                  <>
-                    <span className="catalog__link catalog__link--disabled">
-                      <VariantText text={makeTextVariant(volume.name)} />
-                    </span>
-                    <span className="catalog__meta">
-                      <VariantText text={makeTextVariant("整理中")} />
-                    </span>
-                  </>
-                ) : (
-                  <Link href={`/v/${volume.slug}`} className="catalog__link">
-                    <VariantText text={makeTextVariant(volume.name)} />
-                  </Link>
-                )}
-              </li>
-            );
-          })}
-        </ol>
-      </VolumesNav>
+      <VolumeCatalogList volumes={volumes} />
+      <footer className="catalog__footer">
+        <a
+          href="https://bodhi.wtf/token/0x23707de0f3f0A2406213Ac3Cec8f6366e5efe976"
+          className="catalog__footer-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          bodhi for gu-shi-yuan
+        </a>
+      </footer>
     </CatalogLayout>
   );
 }

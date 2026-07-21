@@ -19,6 +19,8 @@ describe("buildSearchIndex", () => {
     expect(index.poems.find((p) => p.slug === "yin-jiu")?.authorTraditional).toBe(
       "陶潛",
     );
+    expect(index.poems.find((p) => p.slug === "jing-ye-si")?.hasAudio).toBe(true);
+    expect(index.poems.find((p) => p.slug === "ji-rang-ge")?.hasAudio).toBe(false);
   });
 
   it("indexes poem body for line search", () => {
@@ -167,6 +169,7 @@ describe("filterSearchIndex", () => {
         volume: "han",
         dynasty: "汉",
         dynastyTraditional: "漢",
+        hasAudio: false,
         body: `正文${index}`,
         bodyTraditional: `正文${index}`,
       })),

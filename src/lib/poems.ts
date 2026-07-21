@@ -3,12 +3,16 @@ import path from "path";
 import matter from "gray-matter";
 import { parsePoemBody, type PoemBodyStructure } from "./poem-body";
 import {
+  parsePoemAudio,
+  type PoemAudioTrack,
+} from "./poem-audio";
+import {
   parseVerticalLayoutOverride,
   type VerticalLayoutOverride,
 } from "./vertical-layout";
 
-export type { PoemBodyStructure };
-export { parsePoemBody };
+export type { PoemBodyStructure, PoemAudioTrack };
+export { parsePoemBody, parsePoemAudio };
 
 export type Volume = {
   slug: string;
@@ -22,6 +26,8 @@ export type PoemMeta = {
   authorSlug: string;
   dynasty: string;
   volume: string;
+  /** True when frontmatter includes at least one audio track. */
+  hasAudio: boolean;
 };
 
 export type AuthorMeta = {
@@ -51,6 +57,7 @@ export function isLegacyAnonymousAuthorSlug(authorSlug: string): boolean {
 export type Poem = PoemMeta & {
   body: string;
   verticalLayout?: VerticalLayoutOverride;
+  audio?: PoemAudioTrack[];
 };
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
@@ -61,6 +68,7 @@ const VOLUME_MANIFEST_DIR = path.join(CONTENT_DIR, "volumes");
 type PoemFileData = PoemMeta & {
   body: string;
   verticalLayout?: VerticalLayoutOverride;
+  audio?: PoemAudioTrack[];
 };
 
 const poemCacheEnabled = process.env.NODE_ENV === "production";
@@ -122,6 +130,7 @@ function loadPoemFile(slug: string): PoemFileData | undefined {
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
 
+  const audio = parsePoemAudio(data.audio, slug);
   const poem: PoemFileData = {
     slug,
     title: requireField(data, "title", slug),
@@ -129,7 +138,9 @@ function loadPoemFile(slug: string): PoemFileData | undefined {
     authorSlug: requireField(data, "authorSlug", slug),
     dynasty: requireField(data, "dynasty", slug),
     volume: requireField(data, "volume", slug),
+    hasAudio: Boolean(audio?.length),
     verticalLayout: parseVerticalLayoutOverride(data.verticalLayout),
+    audio,
     body: content.trim(),
   };
 
@@ -147,6 +158,7 @@ function toPoemMeta(poem: PoemFileData): PoemMeta {
     authorSlug: poem.authorSlug,
     dynasty: poem.dynasty,
     volume: poem.volume,
+    hasAudio: poem.hasAudio,
   };
 }
 
@@ -158,8 +170,10 @@ function toPoem(poem: PoemFileData): Poem {
     authorSlug: poem.authorSlug,
     dynasty: poem.dynasty,
     volume: poem.volume,
+    hasAudio: poem.hasAudio,
     body: poem.body,
     verticalLayout: poem.verticalLayout,
+    audio: poem.audio,
   };
 }
 
@@ -191,6 +205,14 @@ export function getAllPoems(): PoemMeta[] {
 export function getPoemBySlug(slug: string): Poem | undefined {
   const poem = loadPoemFile(slug);
   return poem ? toPoem(poem) : undefined;
+}
+
+/** Slugs of poems that declare at least one audio track. */
+export function getAudioPoemSlugs(): string[] {
+  return getAllPoems()
+    .filter((poem) => poem.hasAudio)
+    .map((poem) => poem.slug)
+    .sort((a, b) => a.localeCompare(b, "zh-CN"));
 }
 
 export function getAllVolumes(): Volume[] {

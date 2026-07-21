@@ -8,6 +8,7 @@ export type SearchIndexPoem = {
   volume: string;
   dynasty: string;
   dynastyTraditional: string;
+  hasAudio: boolean;
   /** 简体正文，换行已去掉，供子串匹配。 */
   body: string;
   bodyTraditional: string;
@@ -26,6 +27,7 @@ export type SearchIndex = {
 };
 
 export const SEARCH_INDEX_URL = "/search-index.json";
+export const AUDIO_POEM_SLUGS_URL = "/audio-poem-slugs.json";
 
 export type SearchResultPoem = SearchIndexPoem & {
   /** 正文命中时的句号分句；标题/作者命中时为空。 */

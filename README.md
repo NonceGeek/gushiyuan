@@ -21,9 +21,10 @@ npm run typecheck
 npm run verify  # 提交 PR 前的本地门禁：typecheck + lint + test
 ```
 
-字体子集、图标字体与检索索引会写入本地 `scripts/.cache/`。输入未变时 `predev` / `build` 会跳过生成并打印 cache hit；改内容、转换规则、生成脚本、lockfile 或源字体后自动失效。CI 干净 checkout 仍是冷生成。强制重跑：
+字体子集、图标字体与检索索引会写入本地 `scripts/.cache/`。输入未变时 `predev` / `build` 会跳过生成并打印 cache hit；改内容、转换规则、生成脚本、lockfile 或源字体后自动失效。`scripts/.cache/wenkai.manifest.json` 入库后，部署机可在产物已提交时 cache hit。冷生成的 cmap 校验需要 Python：本机用 `npm run font:venv`；Vercel 等无 Python 的环境会跳过校验（子集仍由 Node `subset-font` 生成），CI 有 Python 时仍会校验。强制重跑：
 
 ```bash
+npm run font:venv   # 首次或 venv 缺失时
 npm run generate:force
 # 或 GENERATE_FORCE=1 npm run predev
 # 或删除 scripts/.cache 后再 npm run predev

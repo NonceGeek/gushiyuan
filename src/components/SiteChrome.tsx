@@ -3,6 +3,8 @@
 import { useState, type ReactNode } from "react";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { ScriptVariantProvider } from "@/components/ScriptVariantProvider";
+import { AudioFilterProvider } from "@/components/AudioFilterProvider";
+import { AudioFilterButton } from "@/components/AudioFilterButton";
 import { RandomPoemButton } from "@/components/RandomPoemButton";
 import { SiteSearch } from "@/components/SiteSearch";
 import { SiteChromeActionsContext } from "@/components/SiteChromeActions";
@@ -28,23 +30,26 @@ export function SiteChromeProvider({
 
   return (
     <ScriptVariantProvider uiText={uiText}>
-      <SiteChromeTrailContext.Provider
-        value={{ setTrail, beginTrail, endTrail }}
-      >
-        <SiteChromeActionsContext.Provider value={{ setActions }}>
-          <SkipLink />
-          <div className="site-chrome">
-            <div className="site-chrome__trail">{trail}</div>
-            <div className="site-chrome__actions">
-              {actions}
-              <RandomPoemButton />
-              <SiteSearch />
-              <LanguageToggle />
+      <AudioFilterProvider>
+        <SiteChromeTrailContext.Provider
+          value={{ setTrail, beginTrail, endTrail }}
+        >
+          <SiteChromeActionsContext.Provider value={{ setActions }}>
+            <SkipLink />
+            <div className="site-chrome">
+              <div className="site-chrome__trail">{trail}</div>
+              <div className="site-chrome__actions">
+                {actions}
+                <RandomPoemButton />
+                <SiteSearch />
+                <AudioFilterButton />
+                <LanguageToggle />
+              </div>
             </div>
-          </div>
-          {children}
-        </SiteChromeActionsContext.Provider>
-      </SiteChromeTrailContext.Provider>
+            {children}
+          </SiteChromeActionsContext.Provider>
+        </SiteChromeTrailContext.Provider>
+      </AudioFilterProvider>
     </ScriptVariantProvider>
   );
 }

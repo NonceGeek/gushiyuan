@@ -34,6 +34,7 @@ export function buildSearchIndex(): SearchIndex {
         volume: poem.volume,
         dynasty: poem.dynasty,
         dynastyTraditional: toTraditional(poem.dynasty),
+        hasAudio: poem.hasAudio,
         body,
         bodyTraditional: toTraditional(body),
       };

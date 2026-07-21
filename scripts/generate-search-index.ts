@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { buildSearchIndex } from "../src/lib/search-index";
+import { getAudioPoemSlugs } from "../src/lib/poems";
 import {
   computeInputFingerprint,
   isCacheHit,
@@ -12,8 +13,9 @@ import {
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SEARCH_OUTPUT_PATH = path.join(ROOT, "public/search-index.json");
 const SLUGS_OUTPUT_PATH = path.join(ROOT, "public/poem-slugs.json");
+const AUDIO_SLUGS_OUTPUT_PATH = path.join(ROOT, "public/audio-poem-slugs.json");
 const MANIFEST_OUT = path.join(ROOT, "scripts/.cache/search-index.manifest.json");
-const GENERATOR_VERSION = "1";
+const GENERATOR_VERSION = "2";
 const MAX_POEM_SLUGS_BYTES = 65536;
 
 type SearchCacheManifest = {
@@ -23,6 +25,8 @@ type SearchCacheManifest = {
   authorCount: number;
   searchBytes: number;
   slugBytes: number;
+  audioSlugBytes: number;
+  audioSlugCount: number;
 };
 
 function computeSearchInputsHash(): string {
@@ -83,7 +87,9 @@ function trySearchCacheHit(inputsHash: string): boolean {
     typeof record.poemCount !== "number" ||
     typeof record.authorCount !== "number" ||
     typeof record.searchBytes !== "number" ||
-    typeof record.slugBytes !== "number"
+    typeof record.slugBytes !== "number" ||
+    typeof record.audioSlugBytes !== "number" ||
+    typeof record.audioSlugCount !== "number"
   ) {
     return false;
   }
@@ -96,6 +102,7 @@ function trySearchCacheHit(inputsHash: string): boolean {
       outputs: [
         { path: SEARCH_OUTPUT_PATH, bytes: record.searchBytes },
         { path: SLUGS_OUTPUT_PATH, bytes: record.slugBytes },
+        { path: AUDIO_SLUGS_OUTPUT_PATH, bytes: record.audioSlugBytes },
       ],
     })
   ) {
@@ -110,11 +117,17 @@ function trySearchCacheHit(inputsHash: string): boolean {
       authors: unknown[];
     };
     const slugs = JSON.parse(fs.readFileSync(SLUGS_OUTPUT_PATH, "utf8")) as unknown;
+    const audioSlugs = JSON.parse(
+      fs.readFileSync(AUDIO_SLUGS_OUTPUT_PATH, "utf8"),
+    ) as unknown;
     if (
       !Array.isArray(searchIndex.poems) ||
       !Array.isArray(searchIndex.authors) ||
       searchIndex.poems.length !== record.poemCount ||
-      searchIndex.authors.length !== record.authorCount
+      searchIndex.authors.length !== record.authorCount ||
+      !Array.isArray(audioSlugs) ||
+      audioSlugs.length !== record.audioSlugCount ||
+      audioSlugs.some((slug) => typeof slug !== "string")
     ) {
       return false;
     }
@@ -130,12 +143,15 @@ if (trySearchCacheHit(inputsHash)) {
 } else {
   const index = buildSearchIndex();
   const slugs = index.poems.map((poem) => poem.slug);
+  const audioSlugs = getAudioPoemSlugs();
 
   fs.writeFileSync(SEARCH_OUTPUT_PATH, JSON.stringify(index));
   fs.writeFileSync(SLUGS_OUTPUT_PATH, JSON.stringify(slugs));
+  fs.writeFileSync(AUDIO_SLUGS_OUTPUT_PATH, JSON.stringify(audioSlugs));
 
   const searchBytes = fs.statSync(SEARCH_OUTPUT_PATH).size;
   const slugBytes = fs.statSync(SLUGS_OUTPUT_PATH).size;
+  const audioSlugBytes = fs.statSync(AUDIO_SLUGS_OUTPUT_PATH).size;
 
   writeCacheManifest(MANIFEST_OUT, {
     inputsHash,
@@ -144,6 +160,8 @@ if (trySearchCacheHit(inputsHash)) {
     authorCount: index.authors.length,
     searchBytes,
     slugBytes,
+    audioSlugBytes,
+    audioSlugCount: audioSlugs.length,
   } satisfies SearchCacheManifest);
 
   console.log(
@@ -151,5 +169,8 @@ if (trySearchCacheHit(inputsHash)) {
   );
   console.log(
     `Generated poem-slugs.json: ${(slugBytes / 1024).toFixed(1)} KiB (${slugs.length} slugs)`,
+  );
+  console.log(
+    `Generated audio-poem-slugs.json: ${(audioSlugBytes / 1024).toFixed(1)} KiB (${audioSlugs.length} slugs)`,
   );
 }

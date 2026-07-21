@@ -3,9 +3,14 @@ import fs from "fs";
 import path from "path";
 import { buildSearchIndex } from "../src/lib/search-index";
 import type { SearchIndex } from "../src/lib/search-index-types";
+import { getAudioPoemSlugs } from "../src/lib/poems";
 
 const SEARCH_INDEX_PATH = path.join(process.cwd(), "public/search-index.json");
 const POEM_SLUGS_PATH = path.join(process.cwd(), "public/poem-slugs.json");
+const AUDIO_POEM_SLUGS_PATH = path.join(
+  process.cwd(),
+  "public/audio-poem-slugs.json",
+);
 const MAX_POEM_SLUGS_BYTES = 65536;
 
 function readJsonArtifact(artifactPath: string): unknown {
@@ -84,6 +89,23 @@ if (slugsBytes > MAX_POEM_SLUGS_BYTES) {
   );
 }
 
+const expectedAudioSlugs = getAudioPoemSlugs();
+const audioSlugsArtifact = readJsonArtifact(AUDIO_POEM_SLUGS_PATH);
+if (
+  !Array.isArray(audioSlugsArtifact) ||
+  audioSlugsArtifact.some((slug) => typeof slug !== "string")
+) {
+  throw new Error(`Invalid audio poem slugs artifact: ${AUDIO_POEM_SLUGS_PATH}`);
+}
+try {
+  assert.deepStrictEqual(audioSlugsArtifact, expectedAudioSlugs);
+} catch (error) {
+  throw new Error(
+    `Generated audio poem slugs do not match getAudioPoemSlugs(): ${AUDIO_POEM_SLUGS_PATH}`,
+    { cause: error },
+  );
+}
+
 console.log(
-  `Generated artifacts verified: ${expected.poems.length} poems, ${expected.authors.length} authors, ${slugsArtifact.length} slugs (${slugsBytes} bytes)`,
+  `Generated artifacts verified: ${expected.poems.length} poems, ${expected.authors.length} authors, ${slugsArtifact.length} slugs (${slugsBytes} bytes), ${audioSlugsArtifact.length} audio slugs`,
 );

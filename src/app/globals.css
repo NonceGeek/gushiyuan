@@ -682,7 +682,7 @@ body {
   font-size: 0.85em;
 }
 
-/* 底栏：相邻诗作导航横排；分隔线只由 .poem-nav 画一条 */
+/* 底栏：朗诵播放器与相邻诗作导航横排；分隔线只由 .poem-nav 画一条 */
 .poem-reader__vertical-foot {
   flex-shrink: 0;
   writing-mode: horizontal-tb;
@@ -692,6 +692,77 @@ body {
   padding-block: clamp(0.75rem, 2.5vh, 1.25rem) clamp(0.75rem, 2.5vh, 1.5rem);
   padding-inline: clamp(0.5rem, 3vw, 1rem);
 }
+
+.poem-audio {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.poem-audio:last-child {
+  margin-bottom: 0;
+}
+
+.poem-audio__track {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2rem;
+  padding: 0.25rem 0.65rem 0.25rem 0.5rem;
+  border: none;
+  border-radius: min(var(--radius-md), 12px);
+  background: color-mix(in srgb, var(--color-ink) 4%, transparent);
+  color: color-mix(in srgb, var(--color-ink) 55%, transparent);
+  font-family: var(--font-wenkai), serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    color 100ms ease-out,
+    background-color 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+.poem-audio__track:hover {
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+}
+
+.poem-audio__track:active {
+  transform: scale(0.98);
+}
+
+.poem-audio__track:focus-visible {
+  color: var(--color-ink);
+  outline: 2px solid color-mix(in srgb, var(--color-ink) 24%, transparent);
+  outline-offset: 2px;
+}
+
+.poem-audio__track[aria-pressed="true"] {
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--color-ink) 10%, transparent);
+}
+
+.poem-audio__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.poem-audio__lang {
+  font-weight: 500;
+}
+
+.poem-audio__author {
+  color: color-mix(in srgb, var(--color-ink) 42%, transparent);
+}
+
+.poem-audio__track:hover .poem-audio__author,
+.poem-audio__track[aria-pressed="true"] .poem-audio__author {
+  color: color-mix(in srgb, var(--color-ink) 62%, transparent);
+}
+
 .catalog-layout {
   --poem-page-gutter: 3.25rem;
   --catalog-header-clearance: var(--site-header-clearance);
@@ -828,6 +899,31 @@ body {
   font-size: 0.875rem;
   color: var(--color-ink-muted);
   letter-spacing: 0.06em;
+}
+
+.catalog__footer {
+  margin-top: clamp(2.5rem, 8vh, 4rem);
+  padding-top: 1.25rem;
+  text-align: center;
+}
+
+.catalog__footer-link {
+  color: var(--color-ink-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: color 100ms ease-out;
+}
+
+.catalog__footer-link:hover {
+  color: var(--color-ink);
+}
+
+.catalog__footer-link:focus-visible {
+  color: var(--color-ink);
+  outline: 2px solid color-mix(in srgb, var(--color-ink) 24%, transparent);
+  outline-offset: 3px;
+  border-radius: 0.125rem;
 }
 
 /* 全局站标与检索：固定顶栏，低对比 */
@@ -978,6 +1074,11 @@ body:has(.catalog-layout) .site-chrome {
 .site-chrome__control:hover {
   color: var(--color-ink);
   background: color-mix(in srgb, var(--color-ink) 6%, transparent);
+}
+
+.site-chrome__control--active {
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--color-ink) 10%, transparent);
 }
 
 .site-chrome__control:active:not(:disabled) {
@@ -1160,6 +1261,11 @@ body:has(.catalog-layout) .site-chrome {
 
 .poem-reader--vertical .poem-reader__vertical-foot .poem-nav {
   margin-top: 0;
+}
+
+.poem-reader--vertical .poem-reader__vertical-foot .poem-audio + .poem-nav {
+  margin-top: 0.25rem;
+  padding-top: 1rem;
 }
 
 /* 诗页切换：正文短淡入淡出，顶栏钉住不参与过渡 */

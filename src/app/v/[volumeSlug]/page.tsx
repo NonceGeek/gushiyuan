@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AuthorCatalogList } from "@/components/AuthorCatalogList";
 import { CatalogLayout } from "@/components/CatalogLayout";
-import { VariantText } from "@/components/VariantText";
 import {
   getAllVolumes,
   getAuthorsByVolume,
@@ -36,7 +35,15 @@ export default async function VolumePage({ params }: PageProps) {
     notFound();
   }
 
-  const authors = getAuthorsByVolume(volumeSlug);
+  const authors = getAuthorsByVolume(volumeSlug).map((author) => {
+    const poems = getPoemsByAuthor(volumeSlug, author.slug);
+    return {
+      slug: author.slug,
+      name: makeTextVariant(author.name),
+      poemCount: poems.length,
+      audioPoemCount: poems.filter((poem) => poem.hasAudio).length,
+    };
+  });
 
   return (
     <CatalogLayout
@@ -46,30 +53,11 @@ export default async function VolumePage({ params }: PageProps) {
         { label: makeTextVariant(volume.name) },
       ]}
     >
-      {authors.length === 0 ? (
-        <p className="catalog__empty">
-          <VariantText text={makeTextVariant("此卷尚无收录。")} />
-        </p>
-      ) : (
-        <nav aria-label={`${volume.name}诗人`}>
-          <ol className="catalog__list">
-            {authors.map((author) => {
-              const poemCount = getPoemsByAuthor(volumeSlug, author.slug).length;
-              return (
-                <li key={author.slug} className="catalog__item">
-                  <Link
-                    href={`/v/${volumeSlug}/${author.slug}`}
-                    className="catalog__link"
-                  >
-                    <VariantText text={makeTextVariant(author.name)} />
-                  </Link>
-                  <span className="catalog__meta">{poemCount} 首</span>
-                </li>
-              );
-            })}
-          </ol>
-        </nav>
-      )}
+      <AuthorCatalogList
+        volumeSlug={volumeSlug}
+        volumeName={volume.name}
+        authors={authors}
+      />
     </CatalogLayout>
   );
 }

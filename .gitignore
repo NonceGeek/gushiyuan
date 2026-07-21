@@ -16,6 +16,8 @@
 /out/
 /public/search-index.json
 /public/poem-slugs.json
+/public/audio-poem-slugs.json
+/public/audios/
 
 # production
 /build
@@ -29,7 +31,9 @@
 icon-built-preview.png
 scripts/fonts/LXGWWenKai-Light.ttf
 scripts/fonts/LXGWWenKai-Regular.ttf
-scripts/.cache/
+# Ignore cache contents; keep WenKai subset manifest for deploy cache hits.
+scripts/.cache/*
+!scripts/.cache/wenkai.manifest.json
 
 # debug
 npm-debug.log*
@@ -46,3 +50,4 @@ next-env.d.ts
 
 # cloudflare
 .wrangler/
+.vercel

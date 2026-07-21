@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { describe, expect, it } from "vitest";
+import { parsePoemAudio } from "./poem-audio";
 import { getAllVolumes, getPoemBySlug, getPoemsByVolume } from "./poems";
 import { parseVerticalLayoutOverride } from "./vertical-layout";
 
@@ -70,6 +71,15 @@ describe("imported volume content invariants", () => {
           expect(
             () => parseVerticalLayoutOverride(data.verticalLayout),
             `${slug} has invalid verticalLayout`,
+          ).not.toThrow();
+        }
+      });
+
+      it("uses valid audio frontmatter when present", () => {
+        for (const { slug, data } of poems) {
+          expect(
+            () => parsePoemAudio(data.audio, slug),
+            `${slug} has invalid audio`,
           ).not.toThrow();
         }
       });

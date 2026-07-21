@@ -238,34 +238,106 @@ export const WENKAI_SUBSET_PATHS: string[] = ${serialized};
   fs.writeFileSync(PATH_OUT, contents);
 }
 
-function resolvePythonWithFontTools(): string {
-  const candidates = [
-    path.join(ROOT, ".venv-font/bin/python3"),
-    "python3",
-  ];
+function fontToolsImportOk(python: string): boolean {
+  try {
+    execFileSync(python, ["-c", "from fontTools.ttLib import TTFont"], {
+      stdio: ["ignore", "ignore", "ignore"],
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
 
-  for (const python of candidates) {
-    try {
-      execFileSync(python, ["-c", "from fontTools.ttLib import TTFont"], {
-        stdio: ["ignore", "ignore", "ignore"],
-      });
-      return python;
-    } catch {
-      // try next candidate
-    }
+function pythonRunnable(python: string): boolean {
+  try {
+    execFileSync(python, ["-c", "pass"], {
+      stdio: ["ignore", "ignore", "ignore"],
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Cached: string = usable interpreter, null = skip cmap validation. */
+let cachedCmapPython: string | null | undefined;
+
+/**
+ * Prefer repo-local `.venv-font`. On Vercel / hosts without Python, return null
+ * so subset generation can finish without cmap validation (CI still validates).
+ */
+function resolvePythonWithFontTools(): string | null {
+  if (cachedCmapPython !== undefined) {
+    return cachedCmapPython;
   }
 
-  console.log("Installing fonttools for subset validation…");
-  execFileSync(
-    "python3",
-    ["-m", "pip", "install", "--user", "--quiet", "-r", path.join(ROOT, "requirements.txt")],
-    { stdio: "inherit" },
-  );
-  return "python3";
+  const venvDir = path.join(ROOT, ".venv-font");
+  const venvPython = path.join(venvDir, "bin", "python3");
+  const venvPip = path.join(venvDir, "bin", "pip");
+
+  if (fontToolsImportOk(venvPython)) {
+    cachedCmapPython = venvPython;
+    return cachedCmapPython;
+  }
+  if (fontToolsImportOk("python3")) {
+    cachedCmapPython = "python3";
+    return cachedCmapPython;
+  }
+
+  // Vercel Node builds have no usable Python; never attempt `python3 -m venv`.
+  if (process.env.VERCEL || process.env.SKIP_FONT_CMAP_VALIDATION === "1") {
+    console.warn(
+      "Skipping subset cmap validation (Python unavailable on deploy host).",
+    );
+    cachedCmapPython = null;
+    return cachedCmapPython;
+  }
+
+  if (!pythonRunnable("python3")) {
+    console.warn(
+      "Skipping subset cmap validation (python3 not found). Run: npm run font:venv",
+    );
+    cachedCmapPython = null;
+    return cachedCmapPython;
+  }
+
+  console.log("Creating .venv-font and installing fonttools…");
+  try {
+    if (!fs.existsSync(venvPython)) {
+      execFileSync("python3", ["-m", "venv", venvDir], { stdio: "inherit" });
+    }
+    execFileSync(
+      venvPip,
+      ["install", "--quiet", "-r", path.join(ROOT, "requirements.txt")],
+      { stdio: "inherit" },
+    );
+  } catch (error) {
+    console.warn(
+      "Skipping subset cmap validation (failed to create .venv-font).",
+      error,
+    );
+    cachedCmapPython = null;
+    return cachedCmapPython;
+  }
+
+  if (!fontToolsImportOk(venvPython)) {
+    console.warn(
+      "Skipping subset cmap validation (fonttools missing). Run: npm run font:venv",
+    );
+    cachedCmapPython = null;
+    return cachedCmapPython;
+  }
+
+  cachedCmapPython = venvPython;
+  return cachedCmapPython;
 }
 
 function validateSubsetCmap(fontPath: string, glyphs: number[]): void {
   const python = resolvePythonWithFontTools();
+  if (!python) {
+    return;
+  }
   execFileSync(python, [VALIDATE_SCRIPT, fontPath], {
     input: JSON.stringify(glyphs),
     stdio: ["pipe", "inherit", "inherit"],

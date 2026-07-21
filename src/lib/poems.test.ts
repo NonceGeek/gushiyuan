@@ -87,12 +87,14 @@ describe("getAllVolumes", () => {
       "han",
       "wei",
       "jin",
+      "tang",
       "song",
       "qi",
       "liang",
       "chen",
       "bei-chao",
       "sui",
+      "qing",
     ]);
     expect(volumes[0]?.name).toBe("古逸");
   });
@@ -324,9 +326,11 @@ describe("getPoemsByVolume", () => {
   it("orders song poems by volume manifest", () => {
     const poems = getPoemsByVolume("song");
 
-    expect(poems.length).toBe(83);
+    expect(poems.length).toBe(88);
     expect(poems[0]?.slug).toBe("zi-jun-zhi-chu-yi");
-    expect(poems.at(-1)?.slug).toBe("qing-xi-xiao-gu-ge");
+    expect(poems.at(-1)?.slug).toBe(
+      "po-zhen-zi-wei-chen-tong-fu-fu-zhuang-ci-yi-ji-zhi",
+    );
   });
 
   it("orders qi poems by volume manifest", () => {
@@ -449,7 +453,7 @@ describe("getReadingAdjacentPoems", () => {
   });
 
   it("omits next at the last poem of the last volume", () => {
-    const last = getPoemsByVolume("sui").at(-1);
+    const last = getPoemsByVolume("qing").at(-1);
     expect(last).toBeDefined();
 
     const { prev, next } = getReadingAdjacentPoems(last!.slug);
@@ -488,14 +492,14 @@ describe("getAdjacentVolumeEntryPoems", () => {
   });
 
   it("omits nextVolume at the last volume", () => {
-    const suiFirst = getPoemsByVolume("sui")[0];
-    expect(suiFirst).toBeDefined();
+    const qingFirst = getPoemsByVolume("qing")[0];
+    expect(qingFirst).toBeDefined();
 
     const { prevVolume, nextVolume } = getAdjacentVolumeEntryPoems(
-      suiFirst!.slug,
+      qingFirst!.slug,
     );
 
-    expect(prevVolume?.volume).toBe("bei-chao");
+    expect(prevVolume?.volume).toBe("sui");
     expect(nextVolume).toBeUndefined();
   });
 

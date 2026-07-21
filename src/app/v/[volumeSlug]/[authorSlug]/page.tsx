@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { CatalogLayout } from "@/components/CatalogLayout";
-import { VariantText } from "@/components/VariantText";
+import { PoemCatalogList } from "@/components/PoemCatalogList";
 import {
   ANONYMOUS_AUTHOR_SLUG,
   getAuthorPageParams,
@@ -46,7 +45,11 @@ export default async function AuthorPage({ params }: PageProps) {
     notFound();
   }
 
-  const poems = getPoemsByAuthor(volumeSlug, author.slug);
+  const poems = getPoemsByAuthor(volumeSlug, author.slug).map((poem) => ({
+    slug: poem.slug,
+    title: makeTextVariant(poem.title),
+    hasAudio: poem.hasAudio,
+  }));
 
   return (
     <CatalogLayout
@@ -57,17 +60,7 @@ export default async function AuthorPage({ params }: PageProps) {
         { label: makeTextVariant(author.name) },
       ]}
     >
-      <nav aria-label={`${author.name}诗作`}>
-        <ol className="catalog__list">
-          {poems.map((poem) => (
-            <li key={poem.slug} className="catalog__item">
-              <Link href={`/p/${poem.slug}`} className="catalog__link">
-                <VariantText text={makeTextVariant(poem.title)} />
-              </Link>
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <PoemCatalogList authorName={author.name} poems={poems} />
     </CatalogLayout>
   );
 }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { BreadcrumbItem } from "@/components/Breadcrumbs";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { PoemNav } from "@/components/PoemNav";
+import { PoemAudioPlayer } from "@/components/PoemAudioPlayer";
 import { SiteChromeTrail } from "@/components/SiteChromeTrail";
 import { VariantText } from "@/components/VariantText";
 import { PoemLine, PoemSentence } from "@/components/PoemLine";
@@ -373,9 +374,12 @@ export function PoemReader({
               })}
             </div>
           </div>
-          {(prev || next) && (
+          {(poem.audio?.length || prev || next) && (
             <div className="poem-reader__vertical-foot">
-              <PoemNav prev={prev} next={next} />
+              {poem.audio && poem.audio.length > 0 ? (
+                <PoemAudioPlayer tracks={poem.audio} />
+              ) : null}
+              {(prev || next) && <PoemNav prev={prev} next={next} />}
             </div>
           )}
         </div>
