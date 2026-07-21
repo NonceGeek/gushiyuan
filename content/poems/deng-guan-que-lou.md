@@ -4,7 +4,7 @@ author: 王之涣
 authorSlug: wang-zhi-huan
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"deng-guan-que-lou.wav","author":"郭浚森","lang":"粤"}]
+audio: [{"file_name":"deng-guan-que-lou.mp3","author":"郭浚森","lang":"粤"}]
 ---
 
 白日依山尽。

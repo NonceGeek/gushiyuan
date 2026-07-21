@@ -4,7 +4,7 @@ author: 杜甫
 authorSlug: du-fu
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"jue-ju.wav","author":"刘蔚蓝","lang":"粤"}]
+audio: [{"file_name":"jue-ju.mp3","author":"刘蔚蓝","lang":"粤"}]
 ---
 
 两个黄鹂鸣翠柳。

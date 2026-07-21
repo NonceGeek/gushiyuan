@@ -4,7 +4,7 @@ author: 苏轼
 authorSlug: su-shi
 dynasty: 宋
 volume: song
-audio: [{"file_name":"hui-zhou-yi-jue-shi-li-zhi.wav","author":"刘蔚蓝","lang":"粤"}]
+audio: [{"file_name":"hui-zhou-yi-jue-shi-li-zhi.mp3","author":"刘蔚蓝","lang":"粤"}]
 ---
 
 罗浮山下四时春。

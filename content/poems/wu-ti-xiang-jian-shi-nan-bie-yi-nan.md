@@ -4,7 +4,7 @@ author: 李商隐
 authorSlug: li-shang-yin
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"wu-ti-xiang-jian-shi-nan-bie-yi-nan.wav","author":"楚蕙甄","lang":"粤"}]
+audio: [{"file_name":"wu-ti-xiang-jian-shi-nan-bie-yi-nan.mp3","author":"楚蕙甄","lang":"粤"}]
 ---
 
 相见时难别亦难。

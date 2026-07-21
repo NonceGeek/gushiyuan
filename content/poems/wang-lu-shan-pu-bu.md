@@ -4,7 +4,7 @@ author: 李白
 authorSlug: li-bai
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"wang-lu-shan-pu-bu.wav","author":"郭浚森","lang":"粤"}]
+audio: [{"file_name":"wang-lu-shan-pu-bu.mp3","author":"郭浚森","lang":"粤"}]
 ---
 
 日照香炉生紫烟。

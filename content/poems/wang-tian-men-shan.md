@@ -4,7 +4,7 @@ author: 李白
 authorSlug: li-bai
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"wang-tian-men-shan.wav","author":"黄镜夫","lang":"粤"}]
+audio: [{"file_name":"wang-tian-men-shan.mp3","author":"黄镜夫","lang":"粤"}]
 ---
 
 天门中断楚江开。

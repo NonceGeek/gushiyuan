@@ -4,7 +4,7 @@ author: 李清照
 authorSlug: li-qing-zhao
 dynasty: 宋
 volume: song
-audio: [{"file_name":"xia-ri-jue-ju.wav","author":"楚蕙甄","lang":"粤"}]
+audio: [{"file_name":"xia-ri-jue-ju.mp3","author":"楚蕙甄","lang":"粤"}]
 ---
 
 生当作人杰。

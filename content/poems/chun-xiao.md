@@ -4,7 +4,7 @@ author: 孟浩然
 authorSlug: meng-hao-ran
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"chun-xiao.wav","author":"郭浚森","lang":"粤"}]
+audio: [{"file_name":"chun-xiao.mp3","author":"郭浚森","lang":"粤"}]
 ---
 
 春眠不觉晓。

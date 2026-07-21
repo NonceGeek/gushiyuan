@@ -1,0 +1,28 @@
+# Build / dev artifacts (rebuilt on Vercel)
+.next
+out
+node_modules
+.venv-font
+
+# Copied into public/audios during `npm run build` (audio:sync)
+public/audios
+
+# Font source is downloaded in build when missing
+scripts/fonts/LXGWWenKai-Regular.ttf
+scripts/fonts/LXGWWenKai-Light.ttf
+
+# Local generation cache (wenkai manifest is optional; cold build is fine)
+scripts/.cache
+
+# Generated JSON (rebuilt in build)
+public/search-index.json
+public/poem-slugs.json
+public/audio-poem-slugs.json
+
+# Non-deploy assets
+content/audios/*.docx
+.DS_Store
+**/.DS_Store
+coverage
+.wrangler
+icon-built-preview.png

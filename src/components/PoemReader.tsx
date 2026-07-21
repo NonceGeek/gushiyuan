@@ -6,6 +6,7 @@ import type { BreadcrumbItem } from "@/components/Breadcrumbs";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { PoemNav } from "@/components/PoemNav";
 import { PoemAudioPlayer } from "@/components/PoemAudioPlayer";
+import { SiteChromeCenter } from "@/components/SiteChromeCenter";
 import { SiteChromeTrail } from "@/components/SiteChromeTrail";
 import { VariantText } from "@/components/VariantText";
 import { PoemLine, PoemSentence } from "@/components/PoemLine";
@@ -292,6 +293,11 @@ export function PoemReader({
       <SiteChromeTrail>
         <Breadcrumbs items={breadcrumbs} />
       </SiteChromeTrail>
+      {poem.audio && poem.audio.length > 0 ? (
+        <SiteChromeCenter>
+          <PoemAudioPlayer tracks={poem.audio} />
+        </SiteChromeCenter>
+      ) : null}
       <div ref={readingAreaRef} className="poem-reader__viewport">
         <div className="poem-reader__vertical-layout">
           <div ref={viewportRef} className="poem-reader__columns-viewport">
@@ -374,12 +380,9 @@ export function PoemReader({
               })}
             </div>
           </div>
-          {(poem.audio?.length || prev || next) && (
+          {(prev || next) && (
             <div className="poem-reader__vertical-foot">
-              {poem.audio && poem.audio.length > 0 ? (
-                <PoemAudioPlayer tracks={poem.audio} />
-              ) : null}
-              {(prev || next) && <PoemNav prev={prev} next={next} />}
+              <PoemNav prev={prev} next={next} />
             </div>
           )}
         </div>

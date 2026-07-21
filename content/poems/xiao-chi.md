@@ -4,7 +4,7 @@ author: 杨万里
 authorSlug: yang-wan-li
 dynasty: 宋
 volume: song
-audio: [{"file_name":"xiao-chi.wav","author":"刘蔚蓝","lang":"粤"}]
+audio: [{"file_name":"xiao-chi.mp3","author":"刘蔚蓝","lang":"粤"}]
 ---
 
 泉眼无声惜细流。

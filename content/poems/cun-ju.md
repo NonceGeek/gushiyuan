@@ -4,7 +4,7 @@ author: 高鼎
 authorSlug: gao-ding
 dynasty: 清
 volume: qing
-audio: [{"file_name":"cun-ju.wav","author":"楚蕙甄","lang":"粤"}]
+audio: [{"file_name":"cun-ju.mp3","author":"楚蕙甄","lang":"粤"}]
 ---
 
 草长莺飞二月天。

@@ -4,7 +4,7 @@ author: 李商隐
 authorSlug: li-shang-yin
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"ye-yu-ji-bei.wav","author":"刘蔚蓝","lang":"粤"}]
+audio: [{"file_name":"ye-yu-ji-bei.mp3","author":"刘蔚蓝","lang":"粤"}]
 ---
 
 君问归期未有期。

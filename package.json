@@ -8,6 +8,7 @@
     "font:subset": "tsx scripts/generate-font-subset.ts",
     "font:subset:force": "GENERATE_FORCE=1 tsx scripts/generate-font-subset.ts",
     "font:icon": "tsx scripts/generate-icon-font.ts",
+    "audio:convert": "node scripts/convert-audios-to-mp3.mjs",
     "audio:sync": "node scripts/sync-audios.mjs",
     "search:index": "tsx scripts/generate-search-index.ts",
     "search:index:force": "GENERATE_FORCE=1 tsx scripts/generate-search-index.ts",

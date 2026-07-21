@@ -4,7 +4,7 @@ author: 柳宗元
 authorSlug: liu-zong-yuan
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"jiang-xue.wav","author":"郭浚森","lang":"粤"}]
+audio: [{"file_name":"jiang-xue.mp3","author":"郭浚森","lang":"粤"}]
 ---
 
 千山鸟飞绝。

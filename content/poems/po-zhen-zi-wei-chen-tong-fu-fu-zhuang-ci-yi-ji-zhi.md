@@ -4,7 +4,7 @@ author: 辛弃疾
 authorSlug: xin-qi-ji
 dynasty: 宋
 volume: song
-audio: [{"file_name":"po-zhen-zi-wei-chen-tong-fu-fu-zhuang-ci-yi-ji-zhi.wav","author":"楚蕙甄","lang":"粤"}]
+audio: [{"file_name":"po-zhen-zi-wei-chen-tong-fu-fu-zhuang-ci-yi-ji-zhi.mp3","author":"楚蕙甄","lang":"粤"}]
 ---
 
 醉里挑灯看剑。

@@ -4,7 +4,7 @@ author: 杜牧
 authorSlug: du-mu
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"bo-qin-huai.wav","author":"楚蕙甄","lang":"粤"}]
+audio: [{"file_name":"bo-qin-huai.mp3","author":"楚蕙甄","lang":"粤"}]
 ---
 
 烟笼寒水月笼沙。

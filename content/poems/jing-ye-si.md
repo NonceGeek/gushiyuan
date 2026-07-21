@@ -4,7 +4,7 @@ author: 李白
 authorSlug: li-bai
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"jing-ye-si.wav","author":"郭浚森","lang":"粤"}]
+audio: [{"file_name":"jing-ye-si.mp3","author":"郭浚森","lang":"粤"}]
 ---
 
 床前明月光。

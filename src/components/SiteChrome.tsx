@@ -8,6 +8,7 @@ import { AudioFilterButton } from "@/components/AudioFilterButton";
 import { RandomPoemButton } from "@/components/RandomPoemButton";
 import { SiteSearch } from "@/components/SiteSearch";
 import { SiteChromeActionsContext } from "@/components/SiteChromeActions";
+import { SiteChromeCenterContext } from "@/components/SiteChromeCenter";
 import {
   SiteChromeTrailContext,
   useTrailOwnership,
@@ -25,6 +26,7 @@ export function SiteChromeProvider({
   children,
 }: SiteChromeProviderProps) {
   const [trail, setTrail] = useState<ReactNode>(null);
+  const [center, setCenter] = useState<ReactNode>(null);
   const [actions, setActions] = useState<ReactNode>(null);
   const { beginTrail, endTrail } = useTrailOwnership(setTrail);
 
@@ -34,20 +36,23 @@ export function SiteChromeProvider({
         <SiteChromeTrailContext.Provider
           value={{ setTrail, beginTrail, endTrail }}
         >
-          <SiteChromeActionsContext.Provider value={{ setActions }}>
-            <SkipLink />
-            <div className="site-chrome">
-              <div className="site-chrome__trail">{trail}</div>
-              <div className="site-chrome__actions">
-                {actions}
-                <RandomPoemButton />
-                <SiteSearch />
-                <AudioFilterButton />
-                <LanguageToggle />
+          <SiteChromeCenterContext.Provider value={{ setCenter }}>
+            <SiteChromeActionsContext.Provider value={{ setActions }}>
+              <SkipLink />
+              <div className="site-chrome">
+                <div className="site-chrome__trail">{trail}</div>
+                <div className="site-chrome__center">{center}</div>
+                <div className="site-chrome__actions">
+                  {actions}
+                  <RandomPoemButton />
+                  <SiteSearch />
+                  <AudioFilterButton />
+                  <LanguageToggle />
+                </div>
               </div>
-            </div>
-            {children}
-          </SiteChromeActionsContext.Provider>
+              {children}
+            </SiteChromeActionsContext.Provider>
+          </SiteChromeCenterContext.Provider>
         </SiteChromeTrailContext.Provider>
       </AudioFilterProvider>
     </ScriptVariantProvider>

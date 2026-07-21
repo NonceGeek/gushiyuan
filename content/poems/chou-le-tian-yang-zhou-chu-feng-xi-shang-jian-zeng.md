@@ -4,7 +4,7 @@ author: 刘禹锡
 authorSlug: liu-yu-xi
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"chou-le-tian-yang-zhou-chu-feng-xi-shang-jian-zeng.wav","author":"刘蔚蓝","lang":"粤"}]
+audio: [{"file_name":"chou-le-tian-yang-zhou-chu-feng-xi-shang-jian-zeng.mp3","author":"刘蔚蓝","lang":"粤"}]
 ---
 
 巴山楚水凄凉地。

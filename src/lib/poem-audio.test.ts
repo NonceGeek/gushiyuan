@@ -17,16 +17,16 @@ describe("parsePoemAudio", () => {
   it("parses a JSON track array", () => {
     expect(
       parsePoemAudio(
-        [{ file_name: "jing-ye-si.wav", author: "郭浚森", lang: "粤" }],
+        [{ file_name: "jing-ye-si.mp3", author: "郭浚森", lang: "粤" }],
         "jing-ye-si",
       ),
     ).toEqual([
-      { fileName: "jing-ye-si.wav", author: "郭浚森", lang: "粤" },
+      { fileName: "jing-ye-si.mp3", author: "郭浚森", lang: "粤" },
     ]);
   });
 
   it("rejects non-array and incomplete tracks", () => {
-    expect(() => parsePoemAudio({ file_name: "a.wav" }, "x")).toThrow(/array/);
+    expect(() => parsePoemAudio({ file_name: "a.mp3" }, "x")).toThrow(/array/);
     expect(() =>
       parsePoemAudio([{ author: "郭浚森", lang: "粤" }], "x"),
     ).toThrow(/file_name/);
@@ -36,11 +36,11 @@ describe("parsePoemAudio", () => {
 describe("poemAudioSrc", () => {
   it("maps fileName to /audios/…", () => {
     const track: PoemAudioTrack = {
-      fileName: "jing-ye-si.wav",
+      fileName: "jing-ye-si.mp3",
       author: "郭浚森",
       lang: "粤",
     };
-    expect(poemAudioSrc(track)).toBe("/audios/jing-ye-si.wav");
+    expect(poemAudioSrc(track)).toBe("/audios/jing-ye-si.mp3");
   });
 });
 
@@ -48,7 +48,7 @@ describe("poem audio frontmatter", () => {
   it("loads jing-ye-si audio tracks", () => {
     const poem = getPoemBySlug("jing-ye-si");
     expect(poem?.audio).toEqual([
-      { fileName: "jing-ye-si.wav", author: "郭浚森", lang: "粤" },
+      { fileName: "jing-ye-si.mp3", author: "郭浚森", lang: "粤" },
     ]);
   });
 

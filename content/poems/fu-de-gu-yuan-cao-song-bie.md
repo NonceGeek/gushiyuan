@@ -4,7 +4,7 @@ author: 白居易
 authorSlug: bai-ju-yi
 dynasty: 唐
 volume: tang
-audio: [{"file_name":"fu-de-gu-yuan-cao-song-bie.wav","author":"黄镜夫","lang":"粤"}]
+audio: [{"file_name":"fu-de-gu-yuan-cao-song-bie.mp3","author":"黄镜夫","lang":"粤"}]
 ---
 
 离离原上草。
